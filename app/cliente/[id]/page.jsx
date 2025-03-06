@@ -41,7 +41,7 @@ const ClienteForm = () => {
     let url = window.location.href;
     let id_user = url.split("/")[4];
     const get_cliente =async ()=>{
-      let response = await fetch(`http://127.0.0.1:5000/clientes/${id_user}`)
+      let response = await fetch(`http://127.0.0.1:5000/api/clientes/${id_user}`)
       response = await response.json()
       setFormData(response)
     }

@@ -73,7 +73,7 @@ export default function DataTable() {
 
   useEffect(() => {
     const get_data = async()=>{
-      let response = await fetch('http://127.0.0.1:5000/clientes')
+      let response = await fetch('http://127.0.0.1:5000/api/clientes')
       response = await response.json()
       setRecords(response)
     }
