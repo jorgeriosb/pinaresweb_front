@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Grid, Container, Typography } from '@mui/material';
 
+import {get_cliente_id} from "../../api/cliente"
+
 
 const ClienteForm = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +43,8 @@ const ClienteForm = () => {
     let url = window.location.href;
     let id_user = url.split("/")[4];
     const get_cliente =async ()=>{
-      let response = await fetch(`http://127.0.0.1:5000/api/clientes/${id_user}`)
+      get_cliente_id
+      let response = await get_cliente_id(id_user)
       response = await response.json()
       setFormData(response)
     }

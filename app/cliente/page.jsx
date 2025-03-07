@@ -13,11 +13,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Tooltip from '@mui/material/Tooltip';
+import {getClientes} from "../api/cliente"
 
-
-
-
-//`/cliente/${params.id}`
 
 const   cols = [
   { field: 'nombre', headerName: 'Nombre', width: 600 },
@@ -73,7 +70,7 @@ export default function DataTable() {
 
   useEffect(() => {
     const get_data = async()=>{
-      let response = await fetch('http://127.0.0.1:5000/api/clientes')
+      let response = await getClientes()
       response = await response.json()
       setRecords(response)
     }
