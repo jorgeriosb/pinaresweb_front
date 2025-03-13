@@ -3,9 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Button, TextField, Grid, Container, Typography } from '@mui/material';
 
 import {get_cliente_id} from "../../api/cliente"
+import useAuth from '../../hooks/useAuth';
+
 
 
 const ClienteForm = () => {
+  useAuth();
   const [formData, setFormData] = useState({
     codigo: '',
     nombre: '',

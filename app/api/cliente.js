@@ -1,12 +1,11 @@
-let backend_url =  process.env.NEXT_PUBLIC_BACKEND_URL;
-
+import {req_get} from "./requests"
 
 const getClientes = async ()=>{
-    return fetch(backend_url+'/api/clientes')
+    return req_get('/api/clientes')
 }
 
 const get_cliente_id = async (id)=>{
-    return fetch(`${backend_url}/api/clientes/${id}`)
+    return req_get(`/api/clientes/${id}`)
 }
 
 

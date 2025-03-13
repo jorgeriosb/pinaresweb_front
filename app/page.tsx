@@ -1,20 +1,13 @@
-import { getHumeAccessToken } from "@/utils/getHumeAccessToken";
-import dynamic from "next/dynamic";
+"use-client";
+import AuthCheck from '../components/AuthCheck';
 
-const Chat = dynamic(() => import("@/components/Chat"), {
-  ssr: false,
-});
-
-export default async function Page() {
-  const accessToken = await getHumeAccessToken();
-
-  if (!accessToken) {
-    throw new Error();
-  }
-
+const HomePage = () => {
   return (
-    <div className={"grow flex flex-col"}>
-      <Chat accessToken={accessToken} />
+    <div>
+      <h1>Welcome to the Home Page</h1>
+      <AuthCheck />
     </div>
   );
-}
+};
+
+export default HomePage;

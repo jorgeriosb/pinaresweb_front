@@ -15,46 +15,56 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import Tooltip from '@mui/material/Tooltip';
 import {getClientes} from "../api/cliente"
 
+import useAuth from '../hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
-const   cols = [
-  { field: 'nombre', headerName: 'Nombre', width: 600 },
-  { field: 'cuenta', headerName: 'Cuenta', width: 130 },
-  {
-    field: 'saldo',
-    headerName: 'Saldo',
-    type: 'number',
-    width: 200,
-  },
-  {
-    field: 'manzana',
-    headerName: 'Manzana',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  },
-  {
-    field: 'lote',
-    headerName: 'Lote',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  },
-  {
-    field: 'acciones',
-    headerName: 'acciones',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 200,
-    renderCell: (params) => {
-      return <div><Button href={`/cliente/${params.row.cliente}`} style={{margin:"10px"}}><Tooltip title="Ver Cliente" ><EditIcon /></Tooltip></Button><span style={{margin:"10px"}}><Tooltip title="Ver Cuenta Cliente"><AccountBalanceIcon /></Tooltip></span><span style={{margin:"10px"}}><Tooltip title="Ver Pagos"><PaymentsIcon /></Tooltip></span></div>
-      //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
 
-    }
-    //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  },
-]
+
+
+const renderCols =(router)=>{
+  return [
+    { field: 'id', headerName: 'Cliente', width: 80 },
+    { field: 'nombre', headerName: 'Nombre', width: 600 },
+    { field: 'cuenta', headerName: 'Cuenta', width: 130 },
+    {
+      field: 'saldo',
+      headerName: 'Saldo',
+      type: 'number',
+      width: 200,
+    },
+    {
+      field: 'manzana',
+      headerName: 'Manzana',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 120,
+      //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+    },
+    {
+      field: 'lote',
+      headerName: 'Lote',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 120,
+      //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+    },
+    {
+      field: 'acciones',
+      headerName: 'acciones',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 240,
+      renderCell: (params) => {
+        return <div><Button href={`/cliente/${params.row.cliente}`} style={{margin:"10px"}}><Tooltip title="Ver Cliente" ><EditIcon /></Tooltip></Button>
+        <span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/cuenta/${params.row.cuenta}`);}}><Tooltip title="Ver Cuenta Cliente"><AccountBalanceIcon /></Tooltip></Button>
+        </span><span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/pagos/${params.row.cuenta}`);}}><Tooltip title="Ver Pagos"><PaymentsIcon /></Tooltip></Button></span></div>
+        //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
+  
+      }
+      //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+    },
+  ]
+} 
 
 
 
@@ -66,6 +76,8 @@ const   cols = [
 const paginationModel = { page: 0, pageSize: 50 };
 
 export default function DataTable() {
+  const router = useRouter()
+  useAuth();
   const [records, setRecords] = useState([])
 
   useEffect(() => {
@@ -92,7 +104,7 @@ export default function DataTable() {
       </Box>
       <DataGrid
         rows={records}
-        columns={cols}
+        columns={renderCols(router)}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
