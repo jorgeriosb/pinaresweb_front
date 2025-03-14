@@ -6,9 +6,9 @@ import { useParams } from 'next/navigation'
 
 import {get_cuenta_documentos} from "../../api/cuenta"
 
-import { DataGrid} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import { TextField, Grid, Container, Typography } from '@mui/material';
+import { TextField,Container, Typography } from '@mui/material';
 import Link from 'next/link'
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Tooltip from '@mui/material/Tooltip';
+import Grid from '@mui/material/Grid2';
 
 //import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
@@ -64,6 +65,8 @@ const paginationModel = { page: 0, pageSize: 50 };
 const PagosId = ()=>{
     const router = useRouter()
     const [records, setRecords] = useState([])
+    const [movimientos, setMovimientos] = useState([])
+    const [selectedDocumento, setSelectedDocumento] = useState(null)
     const params = useParams()
     useEffect(()=>{
         const get_pagos = async ()=>{
@@ -87,12 +90,35 @@ const PagosId = ()=>{
       >
         {/* <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/nuevo`}>agregar cliente</Button> */}
       </Box>
+      <Grid container spacing={2}>
+        <Grid size={12}>
+          <div style={{textAlign:"center", fontWeight:"bold"}}>Documentos</div>
+        </Grid>
+        </Grid>
       <DataGrid
+        style={{height:"400px"}}
         rows={records}
         columns={renderCols(router)}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
+        slots={{ toolbar: GridToolbar }}
+      />
+      <div style={{marginTop:"20px"}}></div>
+      <Grid container spacing={2}>
+        <Grid size={12}>
+          <div style={{textAlign:"center", fontWeight:"bold"}}>Movimientos</div>
+        </Grid>
+        </Grid>
+        <div style={{marginBottom:"20px"}}></div>
+      <DataGrid
+        style={{height:"400px"}}
+        rows={records}
+        columns={renderCols(router)}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        sx={{ border: 0 }}
+        slots={{ toolbar: GridToolbar }}
       />
     </Paper>
     )
