@@ -5,4 +5,9 @@ const get_cuenta_id = (id)=>{
 }
 
 
-export {get_cuenta_id}
+const get_cuenta_documentos = (id)=>{
+    return req_get("/api/cuenta/"+id+"/documentos")
+}
+
+
+export {get_cuenta_id, get_cuenta_documentos}
