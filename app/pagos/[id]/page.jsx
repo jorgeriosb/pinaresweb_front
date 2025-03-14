@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 
 
 import {get_cuenta_documentos} from "../../api/cuenta"
-import {get_documento_movimientos} from "../../api/documento"
+import {get_documento_movimientos, crear_documento_pago_anterior} from "../../api/documento"
 
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
@@ -22,11 +22,12 @@ import Grid from '@mui/material/Grid2';
 
 //import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import MyModal from "../../../components/MyModal"
 
-const renderCols =(router, getMovimientos)=>{
+const renderCols =(router, getMovimientos, modalPagoAterior)=>{
   return [
-    { field: 'id', headerName: 'Codigo', width: 80 },
-    { field: 'cargo', headerName: 'Cargo',type: 'number', width: 180 },
+    { field: 'id', headerName: 'Documento', width: 100 },
+    { field: 'cargo', headerName: 'Cargo',type: 'number', width: 150 },
     { field: 'abono', headerName: 'Abono',type: 'number', width: 130 },
     {
       field: 'saldo',
@@ -47,12 +48,13 @@ const renderCols =(router, getMovimientos)=>{
       headerName: 'acciones',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 240,
+      width: 340,
       renderCell: (params) => {
         return <div><Button style={{margin:"10px"}} onClick={()=>{getMovimientos(params.row.id)}}><Tooltip title="Ver Movimientos" >Movimientos</Tooltip></Button>
-        <span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al movimiento">Pagar</Tooltip></Button>
-        </span></div>
-        //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
+        <span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al Documento">Pagar</Tooltip></Button></span>
+        {params.row.saldo > 0 ?  (<span style={{margin:"10px"}}><Button style={{color:"orange"}} onClick={()=>{modalPagoAterior(params.row.id);}}><Tooltip title="Hacer pago Anterior">Pago <br/>Anterior</Tooltip></Button>
+        </span>): ""}
+       </div>
   
       }
     }
@@ -62,9 +64,15 @@ const renderCols =(router, getMovimientos)=>{
 
 const columsMovimientos =()=>{
     return [
-        { field: 'id', headerName: 'Codigo', width: 80 },
-        { field: 'cargoabono', headerName: 'movimiento',type: 'number', width: 180 },
+        { field: 'id', headerName: 'Movimiento', width: 100 },
+        { field: 'cargoabono', headerName: 'C/A',type: 'number', width: 50 },
         { field: 'cantidad', headerName: 'Cantidad',type: 'number', width: 130 },
+        {
+            field: 'fecha',
+            headerName: 'Fecha',
+            type: 'number',
+            width: 200,
+          },
         {
           field: 'fechavencimientodoc',
           headerName: 'Fecha de Vencimiento',
@@ -106,7 +114,9 @@ const PagosId = ()=>{
     const [records, setRecords] = useState([])
     const [movimientos, setMovimientos] = useState([])
     const [selectedDocumento, setSelectedDocumento] = useState(null)
+    const [modelOpenPagoAnteriorFlag, setModelOpenPagoAnteriorFlag] = useState(false)
     const params = useParams()
+    const [pagoAnteriorId, setPagoAnteriorId] = useState(null)
     useEffect(()=>{
         const get_pagos = async ()=>{
             const val = await get_cuenta_documentos(params["id"])
@@ -123,8 +133,30 @@ const PagosId = ()=>{
         setMovimientos(rval)
 
     }
+
+    const modalPagoAterior = (id)=>{
+        console.log("pago anterior")
+        setPagoAnteriorId(id)
+        setModelOpenPagoAnteriorFlag(true)
+    }
+    const closeModalPagoAnterior = ()=>{
+        setModelOpenPagoAnteriorFlag(false)
+    }
+
+    const handleCrearPagoAnterior =async (id, payload)=>{
+        const val = await crear_documento_pago_anterior(id, payload)
+        const rval = await val.json()
+        console.log("viendo el rval")
+        console.log(rval)
+        closeModalPagoAnterior()
+        const docs = await get_cuenta_documentos(params["id"])
+        const rdocs = await docs.json()
+        setRecords(rdocs)
+        setMovimientos([])
+    }
     return (
         <Paper sx={{ height: 600, width: '100%' }}>
+            <MyModal is_open={modelOpenPagoAnteriorFlag} handleClose={closeModalPagoAnterior} documento={pagoAnteriorId} handlePost={handleCrearPagoAnterior}/>
        <Box
         sx={{
           display: 'flex',
@@ -147,7 +179,7 @@ const PagosId = ()=>{
         checkboxSelection
         style={{height:"400px"}}
         rows={records}
-        columns={renderCols(router, getMovimientos)}
+        columns={renderCols(router, getMovimientos, modalPagoAterior)}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
