@@ -1,7 +1,7 @@
+"use client";
 
-
-export default Cuenta=()=>{
-    return (
-        <div>jajaja</div>
-    )
+const Cuenta = ()=>{
+    return (<div>jajaja</div>)
 }
+
+export default Cuenta
