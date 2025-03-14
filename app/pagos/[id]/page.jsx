@@ -96,6 +96,7 @@ const PagosId = ()=>{
         </Grid>
         </Grid>
       <DataGrid
+        checkboxSelection
         style={{height:"400px"}}
         rows={records}
         columns={renderCols(router)}
@@ -112,6 +113,7 @@ const PagosId = ()=>{
         </Grid>
         <div style={{marginBottom:"20px"}}></div>
       <DataGrid
+        checkboxSelection
         style={{height:"400px"}}
         rows={records}
         columns={renderCols(router)}
