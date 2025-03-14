@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 
 
 import {get_cuenta_documentos} from "../../api/cuenta"
+import {get_documento_movimientos} from "../../api/documento"
 
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
@@ -22,10 +23,10 @@ import Grid from '@mui/material/Grid2';
 //import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
-const renderCols =(router)=>{
+const renderCols =(router, getMovimientos)=>{
   return [
     { field: 'id', headerName: 'Codigo', width: 80 },
-    { field: 'cargo', headerName: 'Cargo',type: 'number', width: 600 },
+    { field: 'cargo', headerName: 'Cargo',type: 'number', width: 180 },
     { field: 'abono', headerName: 'Abono',type: 'number', width: 130 },
     {
       field: 'saldo',
@@ -38,26 +39,64 @@ const renderCols =(router)=>{
       headerName: 'Fecha de vencimiento',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 120,
+      width: 250,
       //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
     },
-    // {
-    //   field: 'acciones',
-    //   headerName: 'acciones',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 240,
-    //   renderCell: (params) => {
-    //     return <div><Button href={`/cliente/${params.row.cliente}`} style={{margin:"10px"}}><Tooltip title="Ver Cliente" ><EditIcon /></Tooltip></Button>
-    //     <span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/cuenta/${params.row.cuenta}`);}}><Tooltip title="Ver Cuenta Cliente"><AccountBalanceIcon /></Tooltip></Button>
-    //     </span><span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/pagos/${params.row.cuenta}`);}}><Tooltip title="Ver Pagos"><PaymentsIcon /></Tooltip></Button></span></div>
-    //     //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
+    {
+      field: 'acciones',
+      headerName: 'acciones',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 240,
+      renderCell: (params) => {
+        return <div><Button style={{margin:"10px"}} onClick={()=>{getMovimientos(params.row.id)}}><Tooltip title="Ver Movimientos" >Movimientos</Tooltip></Button>
+        <span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al movimiento">Pagar</Tooltip></Button>
+        </span></div>
+        //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
   
-    //   }
-    //   //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    // },
+      }
+    }
+    
   ]
-} 
+}
+
+const columsMovimientos =()=>{
+    return [
+        { field: 'id', headerName: 'Codigo', width: 80 },
+        { field: 'cargoabono', headerName: 'movimiento',type: 'number', width: 180 },
+        { field: 'cantidad', headerName: 'Cantidad',type: 'number', width: 130 },
+        {
+          field: 'fechavencimientodoc',
+          headerName: 'Fecha de Vencimiento',
+          type: 'number',
+          width: 200,
+        },
+        {
+          field: 'numrecibo',
+          headerName: 'Recibo',
+          description: 'This column has a value getter and is not sortable.',
+          sortable: false,
+          width: 250,
+          //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+        },
+        // {
+        //   field: 'acciones',
+        //   headerName: 'acciones',
+        //   description: 'This column has a value getter and is not sortable.',
+        //   sortable: false,
+        //   width: 240,
+        //   renderCell: (params) => {
+        //     return <div><Button style={{margin:"10px"}} onClick={()=>{getMovimientos(params.row.id)}}><Tooltip title="Ver Movimientos" >Movimientos</Tooltip></Button>
+        //     <span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al movimiento">Pagar</Tooltip></Button>
+        //     </span></div>
+        //     //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
+      
+        //   }
+        // }
+        
+      ]
+
+}
 
 
 const paginationModel = { page: 0, pageSize: 50 };
@@ -76,6 +115,14 @@ const PagosId = ()=>{
         }
         get_pagos()
     },[])
+
+    const getMovimientos = async (documento_id)=>{
+        console.log("esto ", documento_id)
+        const val = await get_documento_movimientos(documento_id)
+        const rval = await val.json()
+        setMovimientos(rval)
+
+    }
     return (
         <Paper sx={{ height: 600, width: '100%' }}>
        <Box
@@ -96,10 +143,11 @@ const PagosId = ()=>{
         </Grid>
         </Grid>
       <DataGrid
+        disableRowSelectionOnClick
         checkboxSelection
         style={{height:"400px"}}
         rows={records}
-        columns={renderCols(router)}
+        columns={renderCols(router, getMovimientos)}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
@@ -113,10 +161,11 @@ const PagosId = ()=>{
         </Grid>
         <div style={{marginBottom:"20px"}}></div>
       <DataGrid
+        disableRowSelectionOnClick
         checkboxSelection
         style={{height:"400px"}}
-        rows={records}
-        columns={renderCols(router)}
+        rows={movimientos}
+        columns={columsMovimientos(router)}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
