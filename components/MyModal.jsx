@@ -4,6 +4,13 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { TextField, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import dayjs from 'dayjs';
+import { object } from 'hume/core/schemas';
+
 
 
 
@@ -22,10 +29,16 @@ const style = {
 export default function MyModal({is_open=false, handleClose, documento, handlePost}) {
     const [cantidad, setCantidad] = useState('');
   const [numrecibo, setNumrecibo] = useState('');
+  const [var_fecha, setFecha] = React.useState(dayjs('2022-04-17'));
   const handleSubmit = async (e) => {
     e.preventDefault();
-    handlePost(documento, {cantidad, numrecibo})
+    let fecha = var_fecha.format("YYYY-MM-DD")
+    handlePost(documento, {cantidad, numrecibo, fecha})
   };
+
+  const handleFecha = (val)=>{
+    console.log("fecha ", val);
+  }
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -61,6 +74,17 @@ export default function MyModal({is_open=false, handleClose, documento, handlePo
               onChange={(e) => setNumrecibo(e.target.value)}
               required
             />
+          </Grid>
+          <Grid item xs={12}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+      <DatePicker
+          label="Controlled picker"
+          value={var_fecha}
+          onChange={(newValue) => setFecha(newValue)}
+        />
+      </DemoContainer>
+    </LocalizationProvider>
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" type="submit" fullWidth>
