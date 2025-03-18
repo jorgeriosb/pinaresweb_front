@@ -23,9 +23,9 @@ import { useRouter } from 'next/navigation';
 
 const renderCols =(router)=>{
   return [
-    { field: 'id', headerName: 'Cliente', width: 80 },
+    { field: 'id', headerName: 'Cuenta', width: 80 },
     { field: 'nombre', headerName: 'Nombre', width: 600 },
-    { field: 'cuenta', headerName: 'Cuenta', width: 130 },
+    { field: 'cliente', headerName: 'Cliente', width: 130 },
     {
       field: 'saldo',
       headerName: 'Saldo',
@@ -56,8 +56,8 @@ const renderCols =(router)=>{
       width: 240,
       renderCell: (params) => {
         return <div><Button href={`/cliente/${params.row.cliente}`} style={{margin:"10px"}}><Tooltip title="Ver Cliente" ><EditIcon /></Tooltip></Button>
-        <span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/cuenta/${params.row.cuenta}`);}}><Tooltip title="Ver Cuenta Cliente"><AccountBalanceIcon /></Tooltip></Button>
-        </span><span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/pagos/${params.row.cuenta}`);}}><Tooltip title="Ver Pagos"><PaymentsIcon /></Tooltip></Button></span></div>
+        <span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/cuenta/${params.row.id}`);}}><Tooltip title="Ver Cuenta Cliente"><AccountBalanceIcon /></Tooltip></Button>
+        </span><span style={{margin:"10px"}}><Button onClick={()=>{router.push(`/pagos/${params.row.id}`);}}><Tooltip title="Ver Pagos"><PaymentsIcon /></Tooltip></Button></span></div>
         //return  <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/${params.row.cliente}`}>agregar cliente</Button>
   
       }

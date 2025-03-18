@@ -52,8 +52,8 @@ const renderCols =(router, getMovimientos, modalPagoAterior)=>{
       width: 340,
       renderCell: (params) => {
         return <div><Button style={{margin:"10px"}} onClick={()=>{getMovimientos(params.row.id)}}><Tooltip title="Ver Movimientos" >Movimientos</Tooltip></Button>
-        {params.row.saldo > 0 ? (<span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al Documento">Pagar</Tooltip></Button></span>): ""}
-        {params.row.saldo > 0 ?  (<span style={{margin:"10px"}}><Button style={{color:"orange"}} onClick={()=>{modalPagoAterior(params.row.id);}}><Tooltip title="Hacer pago Anterior">Pago <br/>Anterior</Tooltip></Button>
+        {params.row.saldo > params.row.abono ? (<span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al Documento">Pagar</Tooltip></Button></span>): ""}
+        {params.row.saldo > params.row.abono ?  (<span style={{margin:"10px"}}><Button style={{color:"orange"}} onClick={()=>{modalPagoAterior(params.row.id);}}><Tooltip title="Hacer pago Anterior">Pago <br/>Anterior</Tooltip></Button>
         </span>): ""}
        </div>
   
@@ -118,11 +118,35 @@ const PagosId = ()=>{
     const [modelOpenPagoAnteriorFlag, setModelOpenPagoAnteriorFlag] = useState(false)
     const params = useParams()
     const [pagoAnteriorId, setPagoAnteriorId] = useState(null)
+    const [saldos, setSaldos] = useState({})
     useEffect(()=>{
         const get_pagos = async ()=>{
             const val = await get_cuenta_documentos(params["id"])
             const rval = await val.json()
             setRecords(rval)
+            const cargo = rval.reduce(
+                (accumulator, currentValue) => accumulator + currentValue.cargo ,
+                0,
+            );
+            const abono = rval.reduce(
+                (accumulator, currentValue) => accumulator + currentValue.abono ,
+                0,
+            );
+            const saldo = rval.reduce(
+                (accumulator, currentValue) => accumulator + currentValue.saldo ,
+                0,
+            );
+            
+            const  fcargo= new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
+                cargo,
+            )
+            const fabono = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
+                abono,
+            )
+            const fsaldo = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
+                saldo,
+            )
+            setSaldos({cargo:fcargo, abono:fabono, saldo:fsaldo})
         }
         get_pagos()
     },[])
@@ -131,6 +155,7 @@ const PagosId = ()=>{
         console.log("esto ", documento_id)
         const val = await get_documento_movimientos(documento_id)
         const rval = await val.json()
+        setSelectedDocumento(documento_id)
         setMovimientos(rval)
 
     }
@@ -189,7 +214,12 @@ const PagosId = ()=>{
       <div style={{marginTop:"20px"}}></div>
       <Grid container spacing={2}>
         <Grid size={12}>
-          <div style={{textAlign:"center", fontWeight:"bold"}}>Movimientos</div>
+          <div style={{textAlign:"left", fontWeight:"bold"}}>Cargo: <span style={{color:"green"}}>{saldos.cargo}</span> Abono:<span style={{color:"#267f9c"}}>{saldos.abono}</span> Saldo:{saldos.saldo} {selectedDocumento}</div>
+        </Grid>
+        </Grid>
+      <Grid container spacing={2}>
+        <Grid size={12}>
+          <div style={{textAlign:"center", fontWeight:"bold"}}>Movimientos, Documento {selectedDocumento}</div>
         </Grid>
         </Grid>
         <div style={{marginBottom:"20px"}}></div>
