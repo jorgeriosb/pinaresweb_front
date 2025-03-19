@@ -51,9 +51,14 @@ const renderCols =(router, getMovimientos, modalPagoAterior)=>{
       sortable: false,
       width: 340,
       renderCell: (params) => {
+        if(params.row.id == 36712){
+            console.log(params.row.id)
+            console.log(params.row.cargo > params.row.abono && params.row.saldo >0)
+            console.log(params.row.cargo, " ", params.row.abono)
+        }
         return <div><Button style={{margin:"10px"}} onClick={()=>{getMovimientos(params.row.id)}}><Tooltip title="Ver Movimientos" >Movimientos</Tooltip></Button>
-        {params.row.cargo > params.row.abono ? (<span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al Documento">Pagar</Tooltip></Button></span>): ""}
-        {params.row.cargo > params.row.abono ?  (<span style={{margin:"10px"}}><Button style={{color:"orange"}} onClick={()=>{modalPagoAterior(params.row.id);}}><Tooltip title="Hacer pago Anterior">Pago <br/>Anterior</Tooltip></Button>
+        {params.row.cargo > parseFloat(params.row.abono).toFixed(2) && params.row.saldo >0 ? (<span style={{margin:"10px"}}><Button style={{color:"green"}} onClick={()=>{router.push(``);}}><Tooltip title="Pagar al Documento">Pagar</Tooltip></Button></span>): ""}
+        {params.row.cargo > parseFloat(params.row.abono).toFixed(2) && params.row.saldo >0 ?  (<span style={{margin:"10px"}}><Button style={{color:"orange"}} onClick={()=>{modalPagoAterior(params.row.id);}}><Tooltip title="Hacer pago Anterior">Pago <br/>Anterior</Tooltip></Button>
         </span>): ""}
        </div>
   
