@@ -6,9 +6,12 @@ import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
 import Github from "./logos/GitHub";
 import pkg from '@/package.json';
+import { useRouter } from 'next/navigation';
+
 
 export const Nav = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const router = useRouter()
 
   useLayoutEffect(() => {
     const el = document.documentElement;
@@ -36,7 +39,10 @@ export const Nav = () => {
         <HumeLogo className={"h-5 w-auto"} />
       </div>
       <div className={"ml-auto flex items-center gap-1"}>
-        <Button
+        <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/cliente")}}>
+          Clientes
+        </Button>
+        {/* <Button
           onClick={() => {
             window.open(
               pkg.homepage,
@@ -65,7 +71,7 @@ export const Nav = () => {
             )}
           </span>
           <span>{isDarkMode ? "Light" : "Dark"} Mode</span>
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

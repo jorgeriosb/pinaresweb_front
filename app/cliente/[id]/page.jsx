@@ -1,46 +1,51 @@
 "use client"; // This is a client component 👈🏽
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Grid, Container, Typography } from '@mui/material';
+import { FormControlLabel, FormGroup, Button, TextField, Grid, Container, Typography, MenuItem, Select, FormControl, InputLabel, Divider, Checkbox } from '@mui/material';
 
 import {get_cliente_id} from "../../api/cliente"
 import useAuth from '../../hooks/useAuth';
+import {create_cliente} from "../../api/cliente"
+import { useRouter } from 'next/navigation';
+
 
 
 
 const ClienteForm = () => {
   useAuth();
+  const router = useRouter()
   const [formData, setFormData] = useState({
-    codigo: '',
-    nombre: '',
-    rfc: '',
-    nacionalidad: '',
-    lugardenacimiento: '',
-    fechadenacimiento: '',
-    estadocivil: '',
-    situacion: '',
-    regimen: '',
-    ocupacion: '',
-    domicilio: '',
-    colonia: '',
-    cp: '',
-    ciudad: '',
-    estado: '',
-    telefonocasa: '',
-    telefonotrabajo: '',
-    conyugenombre: '',
-    conyugenacionalidad: '',
-    conyugelugardenacimiento: '',
-    conyugefechadenacimiento: '',
-    conyugerfc: '',
-    conyugeocupacion: '',
-    contpaq: '',
-    curp: '',
-    conyugecurp: '',
-    email: '',
-    numeroidentificacion: '',
-    identificacion: '',
-    edad: ''
+    codigo: null,
+    nombre: null,
+    rfc: null,
+    nacionalidad: null,
+    lugardenacimiento: null,
+    fechadenacimiento: null,
+    estadocivil: null,
+    situacion: null,
+    regimen: null,
+    ocupacion: null,
+    domicilio: null,
+    colonia: null,
+    cp: null,
+    ciudad: null,
+    estado: null,
+    telefonocasa: null,
+    telefonotrabajo: null,
+    conyugenombre: null,
+    conyugenacionalidad: null,
+    conyugelugardenacimiento: null,
+    conyugefechadenacimiento: null,
+    conyugerfc: null,
+    conyugeocupacion: null,
+    contpaq: null,
+    curp: null,
+    conyugecurp: null,
+    email: null,
+    numeroidentificacion: null,
+    identificacion: null,
+    edad: null
   });
+  const [clienteNuevo, setClienteNuevo] = useState(false)
 
   useEffect(()=>{
     let url = window.location.href;
@@ -62,17 +67,123 @@ const ClienteForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission (e.g., send to backend)
     console.log('Form data submitted:', formData);
+    formData["clienteNuevo"]=clienteNuevo;
+    const val = await create_cliente(formData)
+    const jval = await val.json()
+    if(jval["status"]==="good"){
+      setFormData(jval["data"])
+      router.push(`/cliente/${jval["data"]["codigo"]}`)
+    }else{
+
+    }
   };
+
+  const llenaforma = ()=>{
+    setFormData({...formData, ciudad
+      : 
+      "GUADALAJARA",
+      "codigo"
+      : 
+      "2729",
+      colonia
+      : 
+      "BLANCO Y CUELLA",
+      contpaq
+      : 
+      "",
+      conyugecurp
+      : 
+      "",
+      conyugefechadenacimiento
+      : 
+      "",
+      conyugelugardenacimiento
+      : 
+      "",
+      conyugenacionalidad
+      : 
+      "",
+      conyugenombre
+      : 
+      "",
+      conyugeocupacion
+      : 
+      "",
+      conyugerfc
+      : 
+      "",
+      cp
+      : 
+      "44730",
+      curp
+      : 
+      "MOGK780615MJCNNR08",
+      domicilio
+      : 
+      "C VENTURA ANAYA 767",
+      edad
+      : 
+      "",
+      email
+      : 
+      "KARYSMG@GMAIL.COM",
+      estado
+      : 
+      "JALISCO",
+      estadocivil
+      : 
+      "SOLTERA",
+      fechadenacimiento
+      : 
+      "1978-06-15",
+      identificacion
+      : 
+      "",
+      lugardenacimiento
+      : 
+      "JALISCO",
+      nacionalidad
+      : 
+      "MEXICANA",
+      nombre
+      : 
+      "KARINA MONTAÑO GONZALEZ",
+      numeroidentificacion
+      : 
+      "",
+      ocupacion
+      : 
+      "PROFESIONISTA",
+      regimen
+      : 
+      "ASALARIADO",
+      rfc
+      : 
+      "MOGK780615MJCNNR08",
+      situacion
+      : 
+      "PROFESIONISTA",
+      telefonocasa
+      : 
+      "3314855096",
+      telefonotrabajo
+      : 
+      ""})
+  }
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
         Cliente Form
       </Typography>
+      {/* <Button onClick={llenaforma}>llena forma</Button> */}
+      <FormGroup>
+      <FormControlLabel control={<Checkbox checked={clienteNuevo}  onChange={()=>{setClienteNuevo(!clienteNuevo)}}/>} label="Cliente Nuevo" />
+    </FormGroup>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
@@ -83,7 +194,8 @@ const ClienteForm = () => {
               value={formData.codigo}
               onChange={handleChange}
               fullWidth
-              required
+              disabled={clienteNuevo}
+              required={clienteNuevo}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -141,14 +253,14 @@ const ClienteForm = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField
-              label="Estado Civil"
-              type="text"
-              name="estadocivil"
-              value={formData.estadocivil}
-              onChange={handleChange}
-              fullWidth
-            />
+          <FormControl fullWidth>
+          <InputLabel>Estado Civil</InputLabel>
+          <Select name="estadocivil" value={formData.estadocivil} onChange={handleChange} label="Estado Civil">
+            <MenuItem value="0">Soltero</MenuItem>
+            <MenuItem value="1">Casado</MenuItem>
+            <MenuItem value="2">Divorciado</MenuItem>
+          </Select>
+          </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
@@ -161,14 +273,14 @@ const ClienteForm = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField
-              label="Régimen"
-              type="text"
-              name="regimen"
-              value={formData.regimen}
-              onChange={handleChange}
-              fullWidth
-            />
+          <FormControl fullWidth>
+          <InputLabel>Regimen</InputLabel>
+          <Select name="regimen" value={formData.regimen} onChange={handleChange} label="Estado Civil">
+            <MenuItem value="0">Bienes separados</MenuItem>
+            <MenuItem value="1">Bienes Mancomunados</MenuItem>
+            <MenuItem value="2">Mixtos</MenuItem>
+          </Select>
+          </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
@@ -252,14 +364,51 @@ const ClienteForm = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nombre del Cónyuge"
+              label="CURP"
               type="text"
-              name="conyugenombre"
-              value={formData.conyugenombre}
+              name="curp"
+              value={formData.curp}
               onChange={handleChange}
               fullWidth
             />
           </Grid>
+          <Grid item xs={12} md={6}>
+          <FormControl fullWidth>
+          <InputLabel>Identificacion</InputLabel>
+          <Select name="identificacion" value={formData.identificacion} onChange={handleChange} label="Identificacion">
+            <MenuItem value="INE">INE</MenuItem>
+            <MenuItem value="Pasaporte">Pasaporte</MenuItem>
+          </Select>
+          </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Número de Identificación"
+              type="text"
+              name="numeroidentificacion"
+              value={formData.numeroidentificacion}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={6}></Grid>
+          
+        </Grid>
+        {formData.estadocivil === "1" && (<Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <p style={{fontWeight:"bold", marginTop:"10px"}}>Conyugue</p>
+          </Grid>
+          <Divider />
           <Grid item xs={12} md={6}>
             <TextField
               label="Nacionalidad del Cónyuge"
@@ -314,21 +463,21 @@ const ClienteForm = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField
+            {/* <TextField
               label="Contpaq"
               type="text"
               name="contpaq"
               value={formData.contpaq}
               onChange={handleChange}
               fullWidth
-            />
+            /> */}
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="CURP"
+              label="Nombre del Cónyuge"
               type="text"
-              name="curp"
-              value={formData.curp}
+              name="conyugenombre"
+              value={formData.conyugenombre}
               onChange={handleChange}
               fullWidth
             />
@@ -345,36 +494,6 @@ const ClienteForm = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Número de Identificación"
-              type="text"
-              name="numeroidentificacion"
-              value={formData.numeroidentificacion}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Identificación"
-              type="text"
-              name="identificacion"
-              value={formData.identificacion}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
               label="Edad"
               type="number"
               name="edad"
@@ -383,10 +502,11 @@ const ClienteForm = () => {
               fullWidth
             />
           </Grid>
-        </Grid>
+        </Grid>)}
+
 
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }}>
-          Submit
+          Grabar
         </Button>
       </form>
     </Container>
