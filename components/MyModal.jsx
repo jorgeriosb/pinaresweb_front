@@ -10,6 +10,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { object } from 'hume/core/schemas';
+import 'dayjs/locale/es';
+
+dayjs.locale('es');
 
 
 
@@ -26,10 +29,10 @@ const style = {
   p: 4,
 };
 
-export default function MyModal({is_open=false, handleClose, documento, handlePost}) {
+export default function MyModal({is_open=false, handleClose, documento, handlePost, pagoAnterior=false}) {
     const [cantidad, setCantidad] = useState('');
   const [numrecibo, setNumrecibo] = useState('');
-  const [var_fecha, setFecha] = React.useState(dayjs('2022-04-17'));
+  const [var_fecha, setFecha] = React.useState(dayjs(new Date()));
   const handleSubmit = async (e) => {
     e.preventDefault();
     let fecha = var_fecha.format("YYYY-MM-DD")
@@ -76,10 +79,10 @@ export default function MyModal({is_open=false, handleClose, documento, handlePo
             />
           </Grid>
           <Grid item xs={12}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <DemoContainer components={['DatePicker']}>
       <DatePicker
-          label="Controlled picker"
+          label="Fecha"
           value={var_fecha}
           onChange={(newValue) => setFecha(newValue)}
         />

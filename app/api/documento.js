@@ -8,5 +8,9 @@ const crear_documento_pago_anterior = (id, payload)=>{
     return req_post(`/api/documento/${id}/pagoanterior`, payload)
 }
 
+const pagar_documentos_varios = (payload)=>{
+    return req_post(`/api/documentos/pagar`, payload)
+}
 
-export {get_documento_movimientos, crear_documento_pago_anterior}
+
+export {get_documento_movimientos, crear_documento_pago_anterior, pagar_documentos_varios}

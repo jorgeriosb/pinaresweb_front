@@ -25,6 +25,17 @@ const req_get = (url)=>{
     })
 }
 
+const req_download = (url)=>{
+    const token = localStorage.getItem("token");
+    return fetch(backend_url+url, {
+        method:"GET",
+        headers: {
+            'Accept': 'application/pdf',
+            "Authorization":"Bearer "+token
+        },
+    })
+}
 
 
-export {req_post, req_get}
+
+export {req_post, req_get, req_download}
