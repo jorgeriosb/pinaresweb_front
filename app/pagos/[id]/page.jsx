@@ -239,7 +239,8 @@ const PagosId = ()=>{
       if (jval["status"]=== "good"){
         closeModalPagosVarios()
         carga_info()
-        let recibo = await get_recibo(1)
+        let numrecibo = jval["recibo"]
+        let recibo = await get_recibo(numrecibo)
         const blob = await recibo.blob();
 
         // Create a temporary URL and download link
