@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Tooltip from '@mui/material/Tooltip';
-import {getClientes} from "../api/cliente"
+import {getClientes_cuenta} from "../api/cuenta"
 
 import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
@@ -82,7 +82,7 @@ export default function DataTable() {
 
   useEffect(() => {
     const get_data = async()=>{
-      let response = await getClientes()
+      let response = await getClientes_cuenta()
       response = await response.json()
       setRecords(response)
     }

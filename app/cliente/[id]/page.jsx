@@ -6,13 +6,17 @@ import {get_cliente_id} from "../../api/cliente"
 import useAuth from '../../hooks/useAuth';
 import {create_cliente} from "../../api/cliente"
 import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation'
+
 
 
 
 
 const ClienteForm = () => {
+  const params = useParams()
   useAuth();
   const router = useRouter()
+  const [isNuevo, setIsNuevo] = useState(false)
   const [formData, setFormData] = useState({
     codigo: null,
     nombre: null,
@@ -54,9 +58,12 @@ const ClienteForm = () => {
       get_cliente_id
       let response = await get_cliente_id(id_user)
       response = await response.json()
-      setFormData(response)
+      setFormData((prev)=>{
+        return {...response}
+      })
     }
     get_cliente()
+    console.log("viendo params", params)
   },[])
 
   const handleChange = (e) => {
@@ -182,12 +189,14 @@ const ClienteForm = () => {
       </Typography>
       {/* <Button onClick={llenaforma}>llena forma</Button> */}
       <FormGroup>
-      <FormControlLabel control={<Checkbox checked={clienteNuevo}  onChange={()=>{setClienteNuevo(!clienteNuevo)}}/>} label="Cliente Nuevo" />
+        {params["id"] === "nuevo" &&       <FormControlLabel control={<Checkbox checked={clienteNuevo}  onChange={()=>{setClienteNuevo(!clienteNuevo)}}/>} label="Cliente Nuevo" />
+      }
     </FormGroup>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <TextField
+              variant="outlined"
               label="Código"
               type="number"
               name="codigo"
