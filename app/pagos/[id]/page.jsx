@@ -54,7 +54,9 @@ const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiple
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       width: 250,
-      valueFormatter: (params) => dayjs(params.value).format('DD [de] MMMM [de] YYYY'),
+      valueFormatter: (params) => {
+        let date = new Date(params)
+        return dayjs(date).format('DD [de] MMMM [de] YYYY')},
     },
     {
       field: 'acciones',
@@ -92,14 +94,18 @@ const columsMovimientos =()=>{
             headerName: 'Fecha',
             type: 'number',
             width: 200,
-            valueFormatter: (params) => dayjs(params.value).format('DD [de] MMMM [de] YYYY'),
+            valueFormatter: (params) => {
+              let date = new Date(params)
+              return dayjs(date).format('DD [de] MMMM [de] YYYY')},
           },
         {
           field: 'fechavencimientodoc',
           headerName: 'Fecha de Vencimiento',
           type: 'number',
           width: 200,
-          valueFormatter: (params) => params ? dayjs(params.value).format('DD [de] MMMM [de] YYYY') : null,
+          valueFormatter: (params) => {
+            let date = new Date(params)
+            return dayjs(date).format('DD [de] MMMM [de] YYYY')},
         },
         {
           field: 'numrecibo',
