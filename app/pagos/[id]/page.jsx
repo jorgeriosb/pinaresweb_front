@@ -8,6 +8,8 @@ import {get_cuenta_documentos} from "../../api/cuenta"
 import {get_documento_movimientos, crear_documento_pago_anterior, pagar_documentos_varios} from "../../api/documento"
 import {get_gixamortizacion} from "../../api/gixamortizacion"
 import {get_recibo} from "../../api/recibo"
+import {get_cliente_id} from "../../api/cliente"
+import {get_inmueble_id} from "../../api/inmueble"
 
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
@@ -150,6 +152,8 @@ const PagosId = ()=>{
     const [pagoAnteriorId, setPagoAnteriorId] = useState(null)
     const [saldos, setSaldos] = useState({})
     const [gixamortizacion, setGixAmortizacion] = useState({})
+    const [cliente, setCliente] = useState({})
+    const [inmueble, setInmueble] = useState({})
 
     const carga_info = async ()=>{
       const val = await get_cuenta_documentos(params["id"])
@@ -182,6 +186,12 @@ const PagosId = ()=>{
       const valamortizacion = await get_gixamortizacion(params["id"])
       const ramortizacion = await valamortizacion.json()
       setGixAmortizacion(ramortizacion)
+      const clientereq = await get_cliente_id(ramortizacion["fkcliente"])
+      const jsoncliente = await clientereq.json()
+      setCliente(jsoncliente)
+      const inmueblereq = await get_inmueble_id(ramortizacion["fkinmueble"])
+      const inmueblejson = await inmueblereq.json()
+      setInmueble(inmueblejson)
   }
     useEffect(()=>{
         
@@ -306,7 +316,7 @@ const PagosId = ()=>{
       <div style={{marginTop:"20px"}}></div>
       <Grid container spacing={2}>
         <Grid size={12}>
-          <div style={{textAlign:"left", fontWeight:"bold"}}>Cargo: <span style={{color:"green"}}>{saldos.cargo}</span> Abono:<span style={{color:"#267f9c"}}>{saldos.abono}</span> Saldo:{saldos.saldo} {selectedDocumento}</div>
+          <div style={{textAlign:"left", fontWeight:"bold"}}>Cargo: <span style={{color:"green"}}>{saldos.cargo}</span> Abono:<span style={{color:"#267f9c"}}>{saldos.abono}</span> Saldo:{saldos.saldo} {selectedDocumento} Cliente: {cliente.nombre} Inmueble: Manzana {inmueble.iden1}, Lote {inmueble.iden2}</div>
         </Grid>
         </Grid>
       <Grid container spacing={2}>

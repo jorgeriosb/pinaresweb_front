@@ -73,8 +73,11 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
   useEffect(()=>{
     let sumcatidad = 0;
     formData.forEach((item)=>{
+      console.log("viendo item ", item)
       sumcatidad = parseFloat(sumcatidad)+parseFloat(item["cantidad"])+parseFloat(item["intereses"])
     })
+    console.log("sumcatidad ", sumcatidad )
+    console.log("cantidad ", cantidad)
     if(parseFloat(sumcatidad) === parseFloat(cantidad)){
       setFlagBotonPagar((prev)=>{
         return true
