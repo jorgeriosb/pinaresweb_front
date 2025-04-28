@@ -43,7 +43,7 @@ function calcularInteresSimple(documento, tasainteresanual) {
 
   console.log("dias ", dias)
   const interes = documento["saldo"] * tasaAnual * tiempoEnAnios;
-  return interes.toFixed(2)
+  return Math.round(interes*100)/100
 }
 
 export default function ModalPagarVarios({is_open=false, handleClose, documentos, handlePost, tasainteresanual}) {
@@ -54,6 +54,8 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
   const [formData, setFormData] = useState([])
   const [referencia, setReferencia] = useState("")
   const [loading, setLoading] = useState(false)
+  const [intereses, setIntereses] = useState(0)
+  const [subtotal, setSubtotal] = useState(0)
   const handleSubmit = async (e) => {
     setLoading(true)
     e.preventDefault();
@@ -72,12 +74,16 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
 
   useEffect(()=>{
     let sumcatidad = 0;
+    let intereses =0;
+    let subtotal =0;
     formData.forEach((item)=>{
       console.log("viendo item ", item)
-      sumcatidad = parseFloat(sumcatidad)+parseFloat(item["cantidad"])+parseFloat(item["intereses"])
+      intereses = intereses+parseFloat(item["intereses"])
+      subtotal = subtotal+parseFloat(item["cantidad"])
+      sumcatidad =sumcatidad+parseFloat(item["cantidad"])+parseFloat(item["intereses"])
     })
-    console.log("sumcatidad ", sumcatidad )
-    console.log("cantidad ", cantidad)
+    setIntereses(Math.round(intereses*100)/100)
+    setSubtotal(Math.round(subtotal*100)/100)
     if(parseFloat(sumcatidad) === parseFloat(cantidad)){
       setFlagBotonPagar((prev)=>{
         return true
@@ -120,6 +126,9 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
       <Typography variant="h5" gutterBottom>
         Pagar Documentos
       </Typography>
+      <Grid item xs={12}>
+        Intereses: {intereses}, subtotal: {parseFloat(subtotal)}
+      </Grid>
       </Grid>
         <Grid item xs={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
