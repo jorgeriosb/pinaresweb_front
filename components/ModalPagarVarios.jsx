@@ -84,7 +84,11 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
     })
     setIntereses(Math.round(intereses*100)/100)
     setSubtotal(Math.round(subtotal*100)/100)
-    if(parseFloat(sumcatidad) === parseFloat(cantidad)){
+    let roundedSum = Math.round(sumcatidad * 100) / 100;
+    let roundedCantidad = Math.round(cantidad * 100) / 100;
+    console.log("sumcatidad ", roundedSum)
+    console.log("cantidad ", roundedCantidad)
+    if(roundedSum === roundedCantidad){
       setFlagBotonPagar((prev)=>{
         return true
       })
@@ -128,6 +132,8 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
       </Typography>
       <Grid item xs={12}>
         Intereses: {intereses}, subtotal: {parseFloat(subtotal)}
+        <br/>
+        Total {intereses+parseFloat(subtotal)}
       </Grid>
       </Grid>
         <Grid item xs={6}>

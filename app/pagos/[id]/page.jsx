@@ -316,7 +316,7 @@ const PagosId = ()=>{
       <div style={{marginTop:"20px"}}></div>
       <Grid container spacing={2}>
         <Grid size={12}>
-          <div style={{textAlign:"left", fontWeight:"bold"}}>Cargo: <span style={{color:"green"}}>{saldos.cargo}</span> Abono:<span style={{color:"#267f9c"}}>{saldos.abono}</span> Saldo:{saldos.saldo} {selectedDocumento} Cliente: {cliente.nombre} Inmueble: Manzana {inmueble.iden1}, Lote {inmueble.iden2}</div>
+          <div style={{textAlign:"left", fontWeight:"bold"}}>Cargo: <span style={{color:"green"}}>{saldos.cargo}</span> Abono:<span style={{color:"#267f9c"}}>{saldos.abono}</span> Saldo:{saldos.saldo}  <br/>Cliente: {cliente.nombre} Inmueble: Manzana {inmueble.iden1}, Lote {inmueble.iden2}</div>
         </Grid>
         </Grid>
       <Grid container spacing={2}>
