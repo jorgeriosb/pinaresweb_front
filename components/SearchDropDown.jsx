@@ -16,7 +16,7 @@ export default function SearchDropdown({records, placeHolder, value, handleSelec
         isOptionEqualToValue={(option, value) => option.codigo === value?.codigo}
         value={value}
         onChange={(event, newValue) => handleSelect(newValue)}
-        sx={{ width: 300 }}
+        sx={{ width: '100%'}}
         renderInput={(params) => <TextField {...params} label={placeHolder} />}
       />
     </Stack>
