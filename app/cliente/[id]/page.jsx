@@ -18,36 +18,36 @@ const ClienteForm = () => {
   const router = useRouter()
   const [isNuevo, setIsNuevo] = useState(false)
   const [formData, setFormData] = useState({
-    codigo: null,
-    nombre: null,
-    rfc: null,
-    nacionalidad: null,
-    lugardenacimiento: null,
-    fechadenacimiento: null,
-    estadocivil: null,
-    situacion: null,
-    regimen: null,
-    ocupacion: null,
-    domicilio: null,
-    colonia: null,
-    cp: null,
-    ciudad: null,
-    estado: null,
-    telefonocasa: null,
-    telefonotrabajo: null,
-    conyugenombre: null,
-    conyugenacionalidad: null,
-    conyugelugardenacimiento: null,
-    conyugefechadenacimiento: null,
-    conyugerfc: null,
-    conyugeocupacion: null,
-    contpaq: null,
-    curp: null,
-    conyugecurp: null,
-    email: null,
-    numeroidentificacion: null,
-    identificacion: null,
-    edad: null
+    codigo: '',
+    nombre: '',
+    rfc: '',
+    nacionalidad: '',
+    lugardenacimiento: '',
+    fechadenacimiento: '',
+    estadocivil: '',
+    situacion: '',
+    regimen: '',
+    ocupacion: '',
+    domicilio: '',
+    colonia: '',
+    cp: '',
+    ciudad: '',
+    estado: '',
+    telefonocasa: '',
+    telefonotrabajo: '',
+    conyugenombre: '',
+    conyugenacionalidad: '',
+    conyugelugardenacimiento: '',
+    conyugefechadenacimiento: '',
+    conyugerfc: '',
+    conyugeocupacion: '',
+    contpaq: '',
+    curp: '',
+    conyugecurp: '',
+    email: '',
+    numeroidentificacion: '',
+    identificacion: '',
+    edad: ''
   });
   const [clienteNuevo, setClienteNuevo] = useState(false)
 
@@ -200,7 +200,7 @@ const ClienteForm = () => {
               label="Código"
               type="number"
               name="codigo"
-              value={formData.codigo}
+              value={formData.codigo || ''}
               onChange={handleChange}
               fullWidth
               disabled={clienteNuevo}
@@ -209,10 +209,11 @@ const ClienteForm = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
+              variant="outlined"
               label="Nombre"
               type="text"
               name="nombre"
-              value={formData.nombre}
+              value={formData.nombre || ''}
               onChange={handleChange}
               fullWidth
               required
@@ -223,7 +224,7 @@ const ClienteForm = () => {
               label="RFC"
               type="text"
               name="rfc"
-              value={formData.rfc}
+              value={formData.rfc || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -233,7 +234,7 @@ const ClienteForm = () => {
               label="Nacionalidad"
               type="text"
               name="nacionalidad"
-              value={formData.nacionalidad}
+              value={formData.nacionalidad || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -243,7 +244,7 @@ const ClienteForm = () => {
               label="Lugar de Nacimiento"
               type="text"
               name="lugardenacimiento"
-              value={formData.lugardenacimiento}
+              value={formData.lugardenacimiento || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -253,7 +254,7 @@ const ClienteForm = () => {
               label="Fecha de Nacimiento"
               type="date"
               name="fechadenacimiento"
-              value={formData.fechadenacimiento}
+              value={formData.fechadenacimiento || ''}
               onChange={handleChange}
               fullWidth
               InputLabelProps={{
@@ -264,7 +265,7 @@ const ClienteForm = () => {
           <Grid item xs={12} md={6}>
           <FormControl fullWidth>
           <InputLabel>Estado Civil</InputLabel>
-          <Select name="estadocivil" value={formData.estadocivil} onChange={handleChange} label="Estado Civil">
+          <Select name="estadocivil" value={formData.estadocivil || ''} onChange={handleChange} label="Estado Civil">
             <MenuItem value="0">Soltero</MenuItem>
             <MenuItem value="1">Casado</MenuItem>
             <MenuItem value="2">Divorciado</MenuItem>
@@ -276,7 +277,7 @@ const ClienteForm = () => {
               label="Situación"
               type="text"
               name="situacion"
-              value={formData.situacion}
+              value={formData.situacion || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -284,7 +285,7 @@ const ClienteForm = () => {
           <Grid item xs={12} md={6}>
           <FormControl fullWidth>
           <InputLabel>Regimen</InputLabel>
-          <Select name="regimen" value={formData.regimen} onChange={handleChange} label="Estado Civil">
+          <Select name="regimen" value={formData.regimen || ''} onChange={handleChange} label="Estado Civil">
             <MenuItem value="0">Bienes separados</MenuItem>
             <MenuItem value="1">Bienes Mancomunados</MenuItem>
             <MenuItem value="2">Mixtos</MenuItem>
@@ -296,7 +297,7 @@ const ClienteForm = () => {
               label="Ocupación"
               type="text"
               name="ocupacion"
-              value={formData.ocupacion}
+              value={formData.ocupacion || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -306,7 +307,7 @@ const ClienteForm = () => {
               label="Domicilio"
               type="text"
               name="domicilio"
-              value={formData.domicilio}
+              value={formData.domicilio || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -316,7 +317,7 @@ const ClienteForm = () => {
               label="Colonia"
               type="text"
               name="colonia"
-              value={formData.colonia}
+              value={formData.colonia || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -326,7 +327,7 @@ const ClienteForm = () => {
               label="Código Postal"
               type="text"
               name="cp"
-              value={formData.cp}
+              value={formData.cp || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -336,7 +337,7 @@ const ClienteForm = () => {
               label="Ciudad"
               type="text"
               name="ciudad"
-              value={formData.ciudad}
+              value={formData.ciudad || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -346,7 +347,7 @@ const ClienteForm = () => {
               label="Estado"
               type="text"
               name="estado"
-              value={formData.estado}
+              value={formData.estado || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -356,7 +357,7 @@ const ClienteForm = () => {
               label="Teléfono Casa"
               type="text"
               name="telefonocasa"
-              value={formData.telefonocasa}
+              value={formData.telefonocasa || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -366,7 +367,7 @@ const ClienteForm = () => {
               label="Teléfono Trabajo"
               type="text"
               name="telefonotrabajo"
-              value={formData.telefonotrabajo}
+              value={formData.telefonotrabajo || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -376,7 +377,7 @@ const ClienteForm = () => {
               label="CURP"
               type="text"
               name="curp"
-              value={formData.curp}
+              value={formData.curp || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -384,7 +385,7 @@ const ClienteForm = () => {
           <Grid item xs={12} md={6}>
           <FormControl fullWidth>
           <InputLabel>Identificacion</InputLabel>
-          <Select name="identificacion" value={formData.identificacion} onChange={handleChange} label="Identificacion">
+          <Select name="identificacion" value={formData.identificacion || ''} onChange={handleChange} label="Identificacion">
             <MenuItem value="INE">INE</MenuItem>
             <MenuItem value="Pasaporte">Pasaporte</MenuItem>
           </Select>
@@ -395,7 +396,7 @@ const ClienteForm = () => {
               label="Número de Identificación"
               type="text"
               name="numeroidentificacion"
-              value={formData.numeroidentificacion}
+              value={formData.numeroidentificacion || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -405,7 +406,7 @@ const ClienteForm = () => {
               label="Email"
               type="email"
               name="email"
-              value={formData.email}
+              value={formData.email || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -423,7 +424,7 @@ const ClienteForm = () => {
               label="Nacionalidad del Cónyuge"
               type="text"
               name="conyugenacionalidad"
-              value={formData.conyugenacionalidad}
+              value={formData.conyugenacionalidad || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -433,7 +434,7 @@ const ClienteForm = () => {
               label="Lugar de Nacimiento del Cónyuge"
               type="text"
               name="conyugelugardenacimiento"
-              value={formData.conyugelugardenacimiento}
+              value={formData.conyugelugardenacimiento || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -443,7 +444,7 @@ const ClienteForm = () => {
               label="Fecha de Nacimiento del Cónyuge"
               type="date"
               name="conyugefechadenacimiento"
-              value={formData.conyugefechadenacimiento}
+              value={formData.conyugefechadenacimiento || ''}
               onChange={handleChange}
               fullWidth
               InputLabelProps={{
@@ -456,7 +457,7 @@ const ClienteForm = () => {
               label="RFC del Cónyuge"
               type="text"
               name="conyugerfc"
-              value={formData.conyugerfc}
+              value={formData.conyugerfc || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -466,7 +467,7 @@ const ClienteForm = () => {
               label="Ocupación del Cónyuge"
               type="text"
               name="conyugeocupacion"
-              value={formData.conyugeocupacion}
+              value={formData.conyugeocupacion || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -486,7 +487,7 @@ const ClienteForm = () => {
               label="Nombre del Cónyuge"
               type="text"
               name="conyugenombre"
-              value={formData.conyugenombre}
+              value={formData.conyugenombre || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -496,7 +497,7 @@ const ClienteForm = () => {
               label="CURP del Cónyuge"
               type="text"
               name="conyugecurp"
-              value={formData.conyugecurp}
+              value={formData.conyugecurp || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -506,7 +507,7 @@ const ClienteForm = () => {
               label="Edad"
               type="number"
               name="edad"
-              value={formData.edad}
+              value={formData.edad || ''}
               onChange={handleChange}
               fullWidth
             />
