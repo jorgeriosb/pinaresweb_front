@@ -39,6 +39,7 @@ const CuentaId = ()=>{
     const [var_fecha, setFecha] = React.useState(dayjs(new Date()));
     const [var_fechaenganche, setFechaEnganche] = React.useState(dayjs(new Date()));
     const [flagBotonAmortizacion, setFlagBotonAmortizacion] = useState(false)
+    const router = useRouter()
 
     
 
@@ -69,11 +70,12 @@ const CuentaId = ()=>{
         setFlagBotonAmortizacion(false)
         return
       }
-      if(formFormaDePago.formadepago === "R"){
-        keysToRemove.forEach((key)=>{
-          valid= formFormaDePago[key].trim() !== ''
-        })
-      }
+      // if(formFormaDePago.formadepago === "R"){
+      //   keysToRemove.forEach((key)=>{
+      //     valid= formFormaDePago[key].trim() !== ''
+      //   })
+        
+      // }
       console.log("valid ",valid)
       if (!valid){
         setFlagBotonAmortizacion(false)
@@ -81,7 +83,6 @@ const CuentaId = ()=>{
       }
       console.log("is valid ", valid)
       setFlagBotonAmortizacion(true)
-
     },[formFormaDePago])
 
     const handleChangeFormFormadePago = (e) => {
@@ -91,6 +92,31 @@ const CuentaId = ()=>{
         [name]: value,
       });
     };
+
+    useEffect(()=>{
+      if(formFormaDePago.plazomeses<=24){
+        setFormFormaDePago({
+          ...formFormaDePago,
+          ["tasainteresanual"]:0 ,
+        });
+      } else{
+        setFormFormaDePago({
+          ...formFormaDePago,
+          ["tasainteresanual"]:20 ,
+        });
+      }
+    }, [formFormaDePago.plazomeses])
+
+    useEffect(()=>{
+      if(formFormaDePago.formadepago !== "R"){
+        setFormFormaDePago({
+          ...formFormaDePago,
+          ["tasainteresanual"]:0 ,
+        });
+
+      }
+    }, [formFormaDePago.formadepago])
+
     
 
     useEffect(()=>{
@@ -517,7 +543,7 @@ const CuentaId = ()=>{
               />
             </Grid>
     
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 label="Superficie Casa"
                 name="superficiecasa"
@@ -530,7 +556,7 @@ const CuentaId = ()=>{
               />
             </Grid>
     
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 label="Tipo"
                 name="tipo"
@@ -540,6 +566,11 @@ const CuentaId = ()=>{
                 margin="normal"
                 disabled
               />
+            </Grid>
+            <Grid item xs={4}>
+            <Button onClick={()=>{router.push(`inmuebles_disponibles`);}} variant="contained" color="primary" sx={{ marginTop: '20px' }}>
+            Actualizar Precio
+          </Button>
             </Grid>
           </Grid>
     
@@ -596,6 +627,7 @@ const CuentaId = ()=>{
             {formFormaDePago.formadepago == "R" && (
               <Grid item xs={3}>
               <TextField
+              disabled
                 label="Tasa de interes anual"
                 name="tasainteresanual"
                 value={formFormaDePago.tasainteresanual || ''}
@@ -619,7 +651,7 @@ const CuentaId = ()=>{
             </Grid>
             <Grid item xs={4}>
               <TextField
-                label="Precio de Contado"
+                label="Precio"
                 name="preciocontado"
                 value={formFormaDePago.preciocontado || ''}
                 onChange={handleChangeFormFormadePago}
