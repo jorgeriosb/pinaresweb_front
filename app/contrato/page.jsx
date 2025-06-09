@@ -15,6 +15,7 @@ import { object } from 'hume/core/schemas';
 import 'dayjs/locale/es';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {genera_amortizacion} from "../api/amortizacion"
 
 dayjs.locale('es');
 
@@ -53,36 +54,60 @@ const CuentaId = ()=>{
       descuento:'',
       fechaenganche:'',
       saldoafinanciar:'',
-      pagomensualfijo:'',
+      //pagomensualfijo:'',
     })
 
+    const handle_genera_amortizacion = async ()=>{
+      let payload = {};
+      payload["formadepago"]=formFormaDePago.formadepago;
+      payload["fechaprimerpago"]= formFormaDePago.fechaprimerpago
+      payload["precio"] = formFormaDePago.preciocontado
+      payload["enganche"] = formFormaDePago.enganche
+      payload["descuento"] = formFormaDePago.descuento
+      payload["fechaenganche"] = formFormaDePago.fechaenganche
+      payload["saldoafinanciar"] = formFormaDePago.saldoafinanciar
+      payload["inmueble_iden1"] = inmuebleData.iden1
+      payload["inmueble_iden2"] = inmuebleData.iden2
+      payload["inmueble_preciopormetro"]=inmuebleData.preciopormetro
+      payload["inmueble_superficie"]=inmuebleData.superficie
+      payload["mensualidades"]=0
+      payload["interes_anual"] =0
+      if(formFormaDePago.formadepago == "R"){
+        payload["mensualidades"]=formFormaDePago.plazomeses
+        payload["interes_anual"] =formFormaDePago.tasainteresanual
+      }
+      let recibo = await genera_amortizacion(payload)
+        const blob = await recibo.blob();
+
+        // Create a temporary URL and download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Set the filename for download
+        link.download = 'amortizacion.pdf';
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    }
+
     useEffect(()=>{
+      console.log("aqui mero")
       let valid=true;
       const keysToRemove = ['plazomeses', 'tasainteresanual'];
       const filteredKeys = Object.keys(formFormaDePago).filter(
         key => !keysToRemove.includes(key)
       );
       filteredKeys.forEach((key)=>{
-        valid= formFormaDePago[key].trim() !== ''
+        console.log("viendo key  ",key, " ", formFormaDePago[key])
+        if(formFormaDePago[key].trim() === '' && key !=="descuento"){
+          valid=false
+        }
       })
-      console.log("valid ",valid)
-      if (!valid){
-        setFlagBotonAmortizacion(false)
-        return
-      }
-      // if(formFormaDePago.formadepago === "R"){
-      //   keysToRemove.forEach((key)=>{
-      //     valid= formFormaDePago[key].trim() !== ''
-      //   })
-        
-      // }
-      console.log("valid ",valid)
-      if (!valid){
-        setFlagBotonAmortizacion(false)
-        return
-      }
-      console.log("is valid ", valid)
-      setFlagBotonAmortizacion(true)
+      setFlagBotonAmortizacion(valid)
     },[formFormaDePago])
 
     const handleChangeFormFormadePago = (e) => {
@@ -157,11 +182,12 @@ const CuentaId = ()=>{
       }
 
       const handleFecha=(val, field)=>{
+        let fecha = val.format("YYYY-MM-DD")
         if(field=="fechaprimerpago"){
           setFecha(val)
           setFormFormaDePago({
             ...formFormaDePago,
-            ["fechaprimerpago"]: val,
+            ["fechaprimerpago"]: fecha,
           });
 
         }
@@ -169,7 +195,7 @@ const CuentaId = ()=>{
           setFechaEnganche(val)
           setFormFormaDePago({
             ...formFormaDePago,
-            ["fechaenganche"]: val,
+            ["fechaenganche"]: fecha,
           });
 
         }
@@ -706,7 +732,7 @@ const CuentaId = ()=>{
             </Grid>
           
             
-            <Grid item xs={4}>
+            {/* <Grid item xs={4}>
               <TextField
                 label="Pago mensual fijo"
                 name="pagomensualfijo"
@@ -715,16 +741,36 @@ const CuentaId = ()=>{
                 fullWidth
                 margin="normal"
               />
-            </Grid>
+            </Grid> */}
 
             
           </Grid>
     
           {/* Submit Button */}
           {flagBotonAmortizacion && (
-            <Button style={{backgroundColor:"#1976d2", color:"white"}} >
+             <Grid container spacing={2}>
+            <Grid item xs={3}>
+              <Button style={{backgroundColor:"#1976d2", color:"white"}} onClick={handle_genera_amortizacion} >
             Calcular tabla amortizacion
           </Button>
+          </Grid>
+          <Grid item xs={3}>
+              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_amortizacion} >
+            Generar Pagare
+          </Button>
+          </Grid>
+          <Grid item xs={3}>
+              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_amortizacion} >
+            Generar Contrato
+          </Button>
+          </Grid> 
+          <Grid item xs={3}>
+              <Button style={{backgroundColor:"#198754", color:"white"}} onClick={handle_genera_amortizacion} >
+            Guardar y Crear Cuenta
+          </Button>
+          </Grid> 
+          </Grid>
+              
           )}
         </Box>
         
