@@ -16,6 +16,8 @@ import 'dayjs/locale/es';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {genera_amortizacion} from "../api/amortizacion"
+import {genera_pagare} from "../api/pagare"
+import {genera_contrato} from "../api/contrato"
 
 dayjs.locale('es');
 
@@ -92,6 +94,87 @@ const CuentaId = ()=>{
         // Clean up
         link.remove();
         window.URL.revokeObjectURL(url);
+    }
+
+    const handle_genera_pagare = async()=>{
+      let payload ={
+        "acreedor": "Arcadia Promotora S. de R.L. de C.V.",
+        "domicilio_acreedor": "Av Hidalgo 1443 PB",
+        "total_pagare": parseFloat(formFormaDePago.saldoafinanciar),
+        "plazo_meses":  parseFloat(formFormaDePago.plazomeses),
+        "fecha_inicio": formFormaDePago.fechaprimerpago,
+        "interes_moratorio": 25,
+        "nombre_suscriptor": selectedCliente.nombre,
+        "domicilio_suscriptor": selectedCliente.domicilio,
+        "telefono_suscriptor": selectedCliente.telefonocasa
+      }
+
+      console.log("viendo payload ", payload)
+
+
+      let recibo = await genera_pagare(payload)
+      const blob = await recibo.blob();
+
+      // Create a temporary URL and download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Set the filename for download
+      link.download = 'pagare.pdf';
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    }
+
+
+    const handle_genera_contrato = async()=>{
+      console.log("selectedInmueble ", selectedInmueble)
+      let payload = {
+        "comprador_nombre": selectedCliente.nombre,
+        "comprador_nacionalidad": selectedCliente.nacionalidad,
+        "superficie_m2": selectedInmueble.superficie,
+        "precio_total": selectedInmueble.precio,
+        "anticipo": formFormaDePago.enganche,
+        "nombre_vendedora": "ARCADIA PROMOTORA S. DE R.L. DE C.V.",
+        "descuento":formFormaDePago.descuento,
+        "titulo1": selectedInmueble.titulo1,
+        "titulo2": selectedInmueble.titulo2,
+        "titulo3": selectedInmueble.titulo3,
+        "titulo4": selectedInmueble.titulo4,
+        "lindero1": selectedInmueble.lindero1,
+        "lindero2": selectedInmueble.lindero2,
+        "lindero3": selectedInmueble.lindero3,
+        "lindero4": selectedInmueble.lindero4
+      }
+      if(formFormaDePago.formadepago == "R"){
+        payload["plazo_meses"] = parseFloat(formFormaDePago.plazomeses),
+        payload["interes_anual"] = parseFloat(formFormaDePago.tasainteresanual)
+      }
+
+      console.log("viendo payload ", payload)
+      return 
+
+
+      let recibo = await genera_contrato(payload)
+      const blob = await recibo.blob();
+
+      // Create a temporary URL and download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Set the filename for download
+      link.download = 'contrato.pdf';
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
     }
 
     useEffect(()=>{
@@ -755,12 +838,12 @@ const CuentaId = ()=>{
           </Button>
           </Grid>
           <Grid item xs={3}>
-              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_amortizacion} >
+              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_pagare} >
             Generar Pagare
           </Button>
           </Grid>
           <Grid item xs={3}>
-              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_amortizacion} >
+              <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_contrato} >
             Generar Contrato
           </Button>
           </Grid> 

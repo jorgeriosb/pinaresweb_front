@@ -6,13 +6,13 @@ import {req_get, req_post} from "./requests"
 //     return req_get(`/api/clientes/${id}`)
 // }
 
-const genera_pagare = async (payload) =>{
+const genera_contrato = async (payload) =>{
     console.log("aqui entro")
-    return req_post("/api/pagare", payload)
+    return req_post("/api/contrato", payload)
 }
 
 
 
 
 
-export {genera_pagare};
+export {genera_contrato};
