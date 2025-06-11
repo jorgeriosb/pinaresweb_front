@@ -156,7 +156,7 @@ const CuentaId = ()=>{
       }
 
       console.log("viendo payload ", payload)
-      return 
+       
 
 
       let recibo = await genera_contrato(payload)
