@@ -148,7 +148,18 @@ const CuentaId = ()=>{
         "lindero1": selectedInmueble.lindero1,
         "lindero2": selectedInmueble.lindero2,
         "lindero3": selectedInmueble.lindero3,
-        "lindero4": selectedInmueble.lindero4
+        "lindero4": selectedInmueble.lindero4,
+        "iden1": selectedInmueble.inden1,
+        "iden2": selectedInmueble.inden2,
+        "identificacion": selectedCliente.identificacion,
+        "numeroidentificacion":selectedCliente.numeroidentificacion,
+        "comprador_edad": selectedCliente.edad,
+        "estado_civil":selectedCliente.estadocivil,
+        "comprador_domicilio" :selectedCliente.domicilio,
+        "comprador_ciudad": selectedCliente.ciudad,
+        "comprador_estado":selectedCliente.estado,
+        "comprador_cp": selectedCliente.cp,
+        "comprador_colonia": selectedCliente.colonia
       }
       if(formFormaDePago.formadepago == "R"){
         payload["plazo_meses"] = parseFloat(formFormaDePago.plazomeses),
