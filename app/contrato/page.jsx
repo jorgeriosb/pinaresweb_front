@@ -15,9 +15,10 @@ import { object } from 'hume/core/schemas';
 import 'dayjs/locale/es';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {genera_amortizacion} from "../api/amortizacion"
+import {genera_amortizacion, genera_tabla_amortizacion} from "../api/amortizacion"
 import {genera_pagare} from "../api/pagare"
 import {genera_contrato} from "../api/contrato"
+import {genera_cuenta} from "../api/cuenta"
 
 dayjs.locale('es');
 
@@ -78,7 +79,7 @@ const CuentaId = ()=>{
         payload["mensualidades"]=formFormaDePago.plazomeses
         payload["interes_anual"] =formFormaDePago.tasainteresanual
       }
-      let recibo = await genera_amortizacion(payload)
+      let recibo = await genera_tabla_amortizacion(payload)
         const blob = await recibo.blob();
 
         // Create a temporary URL and download link
@@ -159,7 +160,10 @@ const CuentaId = ()=>{
         "comprador_ciudad": selectedCliente.ciudad,
         "comprador_estado":selectedCliente.estado,
         "comprador_cp": selectedCliente.cp,
-        "comprador_colonia": selectedCliente.colonia
+        "comprador_colonia": selectedCliente.colonia,
+        "fk_etapa": selectedInmueble.fk_etapa,
+        "forma_de_pago": formFormaDePago.formadepago,
+        "fecha_primer_pago":formFormaDePago.fechaprimerpago
       }
       if(formFormaDePago.formadepago == "R"){
         payload["plazo_meses"] = parseFloat(formFormaDePago.plazomeses),
@@ -186,6 +190,64 @@ const CuentaId = ()=>{
       // Clean up
       link.remove();
       window.URL.revokeObjectURL(url);
+    }
+
+    const handle_guardar_amortizacion_detalle = async()=>{
+      console.log("selectedInmueble ", selectedInmueble)
+      let payload = {
+        "comprador_nombre": selectedCliente.nombre,
+        "comprador_nacionalidad": selectedCliente.nacionalidad,
+        "superficie_m2": selectedInmueble.superficie,
+        "precio_total": selectedInmueble.precio,
+        "enganche": formFormaDePago.enganche,
+        "nombre_vendedora": "ARCADIA PROMOTORA S. DE R.L. DE C.V.",
+        "descuento": formFormaDePago.descuento === '' ? 0 : formFormaDePago.descuento,
+        "titulo1": selectedInmueble.titulo1,
+        "titulo2": selectedInmueble.titulo2,
+        "titulo3": selectedInmueble.titulo3,
+        "titulo4": selectedInmueble.titulo4,
+        "lindero1": selectedInmueble.lindero1,
+        "lindero2": selectedInmueble.lindero2,
+        "lindero3": selectedInmueble.lindero3,
+        "lindero4": selectedInmueble.lindero4,
+        "iden1": selectedInmueble.inden1,
+        "iden2": selectedInmueble.inden2,
+        "identificacion": selectedCliente.identificacion,
+        "numeroidentificacion":selectedCliente.numeroidentificacion,
+        "comprador_edad": selectedCliente.edad,
+        "estado_civil":selectedCliente.estadocivil,
+        "comprador_domicilio" :selectedCliente.domicilio,
+        "comprador_ciudad": selectedCliente.ciudad,
+        "comprador_estado":selectedCliente.estado,
+        "comprador_cp": selectedCliente.cp,
+        "comprador_colonia": selectedCliente.colonia,
+        "fk_etapa": selectedInmueble.fk_etapa,
+        "forma_de_pago": formFormaDePago.formadepago,
+        "fecha_primer_pago":formFormaDePago.fechaprimerpago,
+        "fk_cliente": selectedCliente.codigo,
+        "fkvendedor":selectedVendedor.codigo,
+        "fkinmueble":selectedInmueble.codigo,
+        "fechaenganche":formFormaDePago.fechaenganche,
+        "inmueble_preciopormetro":inmuebleData.preciopormetro
+      }
+      if(formFormaDePago.formadepago == "R"){
+        payload["plazo_meses"] = parseFloat(formFormaDePago.plazomeses),
+        payload["interes_anual"] = parseFloat(formFormaDePago.tasainteresanual)
+      }
+
+      let amortizacion_detalle = await genera_amortizacion(payload)
+      let jval = await amortizacion_detalle.json()
+      console.log("jeje")
+      console.log(jval)
+      //response = jsonify({"status":"good", "data":{"amortizacion":pk}})
+      if (jval["status"]=== "good"){
+        console.log("entro en este")
+        payload["amortizacion"] = parseInt(jval["data"]["amortizacion"])
+        //let payload ={}
+        let val2 =  await genera_cuenta(payload)
+      }
+
+
     }
 
     useEffect(()=>{
@@ -230,9 +292,12 @@ const CuentaId = ()=>{
       if(formFormaDePago.formadepago !== "R"){
         setFormFormaDePago({
           ...formFormaDePago,
-          ["tasainteresanual"]:0 ,
+          ["tasainteresanual"]:'' ,
         });
-
+        setFormFormaDePago({
+          ...formFormaDePago,
+          ["plazomeses"]:'' ,
+        });
       }
     }, [formFormaDePago.formadepago])
 
@@ -251,6 +316,14 @@ const CuentaId = ()=>{
             setVendedores(jval2)
         }
         get_data()
+        let today = dayjs().format("YYYY-MM-DD")
+        setFormFormaDePago({
+          ...formFormaDePago,
+          ["fechaprimerpago"]: today,
+          ["fechaenganche"]: today,
+        });
+
+
     },[])
 
     const handleChange = (e) => {
@@ -859,7 +932,7 @@ const CuentaId = ()=>{
           </Button>
           </Grid> 
           <Grid item xs={3}>
-              <Button style={{backgroundColor:"#198754", color:"white"}} onClick={handle_genera_amortizacion} >
+              <Button style={{backgroundColor:"#198754", color:"white"}} onClick={handle_guardar_amortizacion_detalle} >
             Guardar y Crear Cuenta
           </Button>
           </Grid> 
