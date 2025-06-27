@@ -19,6 +19,9 @@ import {genera_amortizacion, genera_tabla_amortizacion} from "../api/amortizacio
 import {genera_pagare} from "../api/pagare"
 import {genera_contrato} from "../api/contrato"
 import {genera_cuenta} from "../api/cuenta"
+import BasicModal from "../../components/ModalCuentaCreada"
+import Paper from '@mui/material/Paper';
+
 
 dayjs.locale('es');
 
@@ -28,7 +31,7 @@ dayjs.locale('es');
 
 var lista = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36']
 const CuentaId = ()=>{
-    const [cuenta, setCuenta] = useState({})
+    const [cuenta, setCuenta] = useState(null)
     const [inmueble, setInmueble] = useState({})
     const [selectedInmueble, setSelectedInmueble] = useState(null)
     const [inmueblesDisponibles, setInmueblesDisponibles] = useState([])
@@ -43,6 +46,7 @@ const CuentaId = ()=>{
     const [var_fecha, setFecha] = React.useState(dayjs(new Date()));
     const [var_fechaenganche, setFechaEnganche] = React.useState(dayjs(new Date()));
     const [flagBotonAmortizacion, setFlagBotonAmortizacion] = useState(false)
+    const [modalCuentaNuevaFlag, setModalCuentaNuevaFlag] = useState(false)
     const router = useRouter()
 
     
@@ -245,6 +249,11 @@ const CuentaId = ()=>{
         payload["amortizacion"] = parseInt(jval["data"]["amortizacion"])
         //let payload ={}
         let val2 =  await genera_cuenta(payload)
+        let jval2 = await val2.json()
+        if (jval2["status"]=== "good"){
+          setCuenta(jval2["data"]["cuenta"])
+          setModalCuentaNuevaFlag(true)
+        }
       }
 
 
@@ -368,7 +377,14 @@ const CuentaId = ()=>{
         }
 
       }
+
+      const closeModalCuentaNueva = ()=>{
+        setModalCuentaNuevaFlag(false)
+      }
       return (
+        <Paper sx={{ height: 600, width: '100%' }}>
+        <BasicModal open={modalCuentaNuevaFlag} handleClose={closeModalCuentaNueva} router={router} cuenta={cuenta}/>
+
         <Box
           
           sx={{
@@ -381,8 +397,7 @@ const CuentaId = ()=>{
             boxShadow: 3,
             borderRadius: 2,
           }}
-        >
-
+        > 
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -397,6 +412,7 @@ const CuentaId = ()=>{
             borderRadius: 2,
           }}
         >
+          <Button onClick={()=>{setModalCuentaNuevaFlag(true)}}>prueba</Button>
           <Typography variant="h6" gutterBottom>
             Cliente - Vendedor
           </Typography>
@@ -940,8 +956,9 @@ const CuentaId = ()=>{
               
           )}
         </Box>
-        
+
         </Box>
+        </Paper>
       );
 }
 

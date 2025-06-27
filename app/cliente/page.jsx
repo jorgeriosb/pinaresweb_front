@@ -33,7 +33,7 @@ const renderCols =(router)=>{
       width: 200,
     },
     {
-      field: 'manzana',
+      field: 'lote',
       headerName: 'Manzana',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
@@ -41,7 +41,7 @@ const renderCols =(router)=>{
       //valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
     },
     {
-      field: 'lote',
+      field: 'manzana',
       headerName: 'Lote',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
