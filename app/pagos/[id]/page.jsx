@@ -62,7 +62,7 @@ const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiple
     },
     {
       field: 'acciones',
-      headerName: 'acciones',
+      headerName: 'Acciones',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       width: 340,
@@ -81,7 +81,8 @@ const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiple
        </div>
   
       }
-    }
+    },
+    { field: 'tipo', headerName: 'Descripcion',type: 'string', width: 230 },
     
   ]
 }
