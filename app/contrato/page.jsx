@@ -412,7 +412,6 @@ const CuentaId = ()=>{
             borderRadius: 2,
           }}
         >
-          <Button onClick={()=>{setModalCuentaNuevaFlag(true)}}>prueba</Button>
           <Typography variant="h6" gutterBottom>
             Cliente - Vendedor
           </Typography>

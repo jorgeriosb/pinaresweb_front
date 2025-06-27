@@ -31,12 +31,12 @@ const style = {
   p: 4,
 };
 
-function calcularInteresSimple(documento, tasainteresanual) {
+function calcularInteresSimple(documento, tasainteresanual, fecha_pago) {
   console.log("viendo esto ", tasainteresanual)
   const tasaAnual = parseFloat(tasainteresanual) /100
   const unDia = 1000 * 60 * 60 * 24; // milisegundos en un día
   const inicio = new Date(documento["fechadevencimiento"]);
-  const fin = new Date();
+  const fin = fecha_pago
 
   const dias = Math.floor((fin - inicio) / unDia);
   const tiempoEnAnios = dias / 360;
@@ -102,9 +102,16 @@ export default function ModalPagarVarios({is_open=false, handleClose, documentos
 
   useEffect(() => {
     if(documentos.length>0){
-      setFormData(documentos.map((item) => ({id:item["id"], cantidad: 0, intereses: calcularInteresSimple(item, tasainteresanual), saldo:item["saldo"], "fechadevencimiento":item["fechadevencimiento"] })));
+      setFormData(documentos.map((item) => ({id:item["id"], cantidad: 0, intereses: calcularInteresSimple(item, tasainteresanual, new Date()), saldo:item["saldo"], "fechadevencimiento":item["fechadevencimiento"] })));
     }
   }, [documentos]);
+
+  useEffect(()=>{
+    console.log("aqui")
+    if(documentos.length>0){
+      setFormData(documentos.map((item) => ({id:item["id"], cantidad: 0, intereses: calcularInteresSimple(item, tasainteresanual, var_fecha), saldo:item["saldo"], "fechadevencimiento":item["fechadevencimiento"] })));
+    }
+  }, [var_fecha])
 
   return (
     <div>
