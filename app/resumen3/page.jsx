@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Grid, Container, Box} from '@mui/material';
-import {get_resumen2, get_resumen_inmuebles_fecha} from "../api/resument"
+import {get_resumen, get_resumen_inmuebles_fecha} from "../api/resument"
 import {
   Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, Typography, CircularProgress
@@ -28,7 +28,7 @@ const ClienteForm = () => {
   useEffect(()=>{
     let get_data = async ()=>{
       console.log("aqui")
-      let val = await get_resumen2()
+      let val = await get_resumen()
       let jval = await val.json()
       setData(jval["data"])
       setLoading(false);
@@ -93,27 +93,40 @@ const ClienteForm = () => {
       ]
 
 }
-const headers = ['year', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Total'];
-
-const columns = headers.map((header) => ({
-  field: header,
-  headerName: header,
-  width: header === 'year' ? 100 : 90,
-}));
-
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
         Resumen
       </Typography>
-      <Box style={{height:"700px"}}>
+      <Box style={{height:"400px"}}>
       <DataGrid
-        rows={data}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-      />
+              disableRowSelectionOnClick
+              //checkboxSelection
+              style={{height:"400px"}}
+              rows={data}
+              columns={columsMovimientos()}
+              //initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              sx={{ border: 0 }}
+              slots={{ toolbar: GridToolbar }}
+            />
+      </Box>
+      {sectedDate && <Typography variant="h4" gutterBottom>Inmuebles De Fecha {sectedDate} </Typography>}
+      <Box style={{height:"400px"}}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+      <DataGrid
+              disableRowSelectionOnClick
+              //checkboxSelection
+              style={{height:"400px"}}
+              rows={inmuebles}
+              columns={columsInmueble()}
+              //initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              sx={{ border: 0 }}
+              slots={{ toolbar: GridToolbar }}
+            />
+            </LocalizationProvider>
       </Box>
       
       
