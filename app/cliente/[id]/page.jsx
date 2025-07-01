@@ -411,7 +411,16 @@ const ClienteForm = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} md={6}></Grid>
+          <Grid item xs={12} md={6}>
+          <TextField
+              label="Edad"
+              type="number"
+              name="edad"
+              value={formData.edad || ''}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
           
         </Grid>
         {formData.estadocivil === "1" && (<Grid container spacing={3}>

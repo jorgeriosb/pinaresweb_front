@@ -39,6 +39,8 @@ function calcularInteresSimple(documento, tasainteresanual, fecha_pago) {
   const fin = fecha_pago
 
   const dias = Math.floor((fin - inicio) / unDia);
+  console.log("documento ", documento,  " viendo dias ", dias)
+  console.log("tasa interes ", tasainteresanual)
   const tiempoEnAnios = dias / 360;
 
   console.log("dias ", dias)

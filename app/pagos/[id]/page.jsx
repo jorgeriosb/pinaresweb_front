@@ -187,6 +187,7 @@ const PagosId = ()=>{
       const valamortizacion = await get_gixamortizacion(params["id"])
       const ramortizacion = await valamortizacion.json()
       setGixAmortizacion(ramortizacion)
+      console.log("gixamortizacion ", gixamortizacion)
       const clientereq = await get_cliente_id(ramortizacion["fkcliente"])
       const jsoncliente = await clientereq.json()
       setCliente(jsoncliente)
