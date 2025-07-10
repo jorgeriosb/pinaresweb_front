@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Autocomplete, TextField, Button, Stack } from "@mui/material";
 
 
-export default function SearchDropdown({records, placeHolder, value, handleSelect, label1='', label2='', label3=''}) {
+export default function SearchDropdown({records, placeHolder, value, handleSelect, label1='', label2='', label3='', disabled=false}) {
 
   const formatLabel = (option)=>{
     return `${option[label1] ?? ""} ${option[label2] ?? ""} ${option[label3] ?? ""}`
@@ -11,6 +11,7 @@ export default function SearchDropdown({records, placeHolder, value, handleSelec
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       <Autocomplete
+        disabled={disabled}
         options={records}
         getOptionLabel={(option) => {return formatLabel(option)}}
         isOptionEqualToValue={(option, value) => option.codigo === value?.codigo}

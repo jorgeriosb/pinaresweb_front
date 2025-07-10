@@ -1,13 +1,13 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation'
-import {get_cuenta_id} from "..//api/cuenta"
-import {get_inmueble_id, get_inmuebles_disponibles} from "..//api/inmueble"
+import {get_cuenta_id} from "../../api/cuenta"
+import {get_inmueble_id, get_inmuebles_disponibles} from "../../api/inmueble"
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Box, Typography, Grid, FormControl, FormControlLabel, InputLabel, Select, MenuItem } from '@mui/material';
-import SearchDropdown from "../../components/SearchDropDown"
-import {get_clientes} from "../api/cliente"
-import {get_vendedores} from "../api/vendedor"
+import SearchDropdown from "../../../components/SearchDropDown"
+import {get_clientes} from "../../api/cliente"
+import {get_vendedores} from "../../api/vendedor"
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
@@ -15,11 +15,11 @@ import { object } from 'hume/core/schemas';
 import 'dayjs/locale/es';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {genera_amortizacion, genera_tabla_amortizacion} from "../api/amortizacion"
-import {genera_pagare} from "../api/pagare"
-import {genera_contrato} from "../api/contrato"
-import {genera_cuenta} from "../api/cuenta"
-import ModalContratoCreado from "../../components/ModalContratoCreado"
+import {genera_amortizacion, genera_tabla_amortizacion, get_amortizacion_id} from "../../api/amortizacion"
+import {genera_pagare} from "../../api/pagare"
+import {genera_contrato} from "../../api/contrato"
+import {genera_cuenta} from "../../api/cuenta"
+import BasicModal from "../../../components/ModalCuentaCreada"
 import Paper from '@mui/material/Paper';
 
 
@@ -48,7 +48,6 @@ const CuentaId = ()=>{
     const [flagBotonAmortizacion, setFlagBotonAmortizacion] = useState(false)
     const [modalCuentaNuevaFlag, setModalCuentaNuevaFlag] = useState(false)
     const router = useRouter()
-    const [amortizacion, setAmortizacion] = useState(null)
 
     
 
@@ -240,22 +239,16 @@ const CuentaId = ()=>{
         payload["plazo_meses"] = parseFloat(formFormaDePago.plazomeses),
         payload["interes_anual"] = parseFloat(formFormaDePago.tasainteresanual)
       }
-
-      let amortizacion_detalle = await genera_amortizacion(payload)
-      let jval = await amortizacion_detalle.json()
-      console.log("jeje")
-      console.log(jval)
-      //response = jsonify({"status":"good", "data":{"amortizacion":pk}})
-      if (jval["status"]=== "good"){
-        console.log("entro en este")
-        payload["amortizacion"] = parseInt(jval["data"]["amortizacion"])
-        //let payload ={}
-        //let val2 =  await genera_cuenta(payload)
-        //let jval2 = await val2.json()
-        setAmortizacion(jval["data"]["amortizacion"])
+      let url = window.location.href;
+      let id = url.split("/")[4];
+      payload["amortizacion"] = id
+      let val2 =  await genera_cuenta(payload)
+      let jval2 = await val2.json()
+      if (jval2["status"]=== "good"){
+        setCuenta(jval2["data"]["cuenta"])
         setModalCuentaNuevaFlag(true)
-      
       }
+    
 
 
     }
@@ -263,7 +256,7 @@ const CuentaId = ()=>{
     useEffect(()=>{
       console.log("aqui mero")
       let valid=true;
-      const keysToRemove = ['plazomeses', 'tasainteresanual', 'preciocontado'];
+      const keysToRemove = ['plazomeses', 'tasainteresanual'];
       const filteredKeys = Object.keys(formFormaDePago).filter(
         key => !keysToRemove.includes(key)
       );
@@ -324,15 +317,46 @@ const CuentaId = ()=>{
             const val2 = await get_vendedores()
             const jval2 = await val2.json()
             setVendedores(jval2)
+
+
+
+            //traer amortizacion y poner valores
+            let url = window.location.href;
+            let id = url.split("/")[4];
+            let amortizacion = await get_amortizacion_id(id)
+            let jamortizacion = await amortizacion.json()
+            console.log("viendolo ", jamortizacion)
+            let cliente = jclientes.filter((item)=>{
+              return item.codigo === jamortizacion.fkcliente
+            })
+            console.log("viendo el cliente ", cliente[0])
+            setSelectedCliente(cliente[0])
+            let vendedor = jclientes.filter((item)=>{
+              return item.codigo === jamortizacion.fkvendedor
+            })
+            setSelectedVendedor(vendedor[0])
+            let inmueble = jval.filter((item)=>{
+              return item.codigo === jamortizacion.fkinmueble
+            })
+            //setSelectedInmueble(inmueble[0])
+            handleSelectedInmueble(inmueble[0])
+            setFormFormaDePago({
+              ...formFormaDePago,
+              "formadepago":jamortizacion.formapago,
+              "fechaprimerpago":jamortizacion.fechaprimerpago,
+              "enganche":jamortizacion.enganchec,
+              "descuento":jamortizacion.descuentoc,
+              "saldoafinanciar":jamortizacion.saldoafinanciar,
+              "fechaenganche":jamortizacion.fechaenganche,
+              "plazomeses":jamortizacion.plazomeses,
+              "tasainteresanual":jamortizacion.tasainteresanual
+            })
+            setFecha(dayjs(jamortizacion.fechaprimerpago))
+            setFechaEnganche(dayjs(jamortizacion.fechaenganche))
+
+
         }
         get_data()
-        let today = dayjs().format("YYYY-MM-DD")
-        setFormFormaDePago({
-          ...formFormaDePago,
-          ["fechaprimerpago"]: today,
-          ["fechaenganche"]: today,
-        });
-
 
     },[])
 
@@ -384,7 +408,7 @@ const CuentaId = ()=>{
       }
       return (
         <Paper sx={{ height: 600, width: '100%' }}>
-        <ModalContratoCreado open={modalCuentaNuevaFlag} handleClose={closeModalCuentaNueva} router={router} contrato={amortizacion}/>
+        <BasicModal open={modalCuentaNuevaFlag} handleClose={closeModalCuentaNueva} router={router} cuenta={cuenta}/>
 
         <Box
           
@@ -422,6 +446,7 @@ const CuentaId = ()=>{
             {/* Full width item for dropdown */}
             <Grid item xs={12}>
               <SearchDropdown
+                disabled
                 placeHolder="Selecciona Cliente"
                 records={clientes}
                 value={selectedCliente}
@@ -430,13 +455,14 @@ const CuentaId = ()=>{
               />
             </Grid>
             <Grid container xs={12} spacing={2}  style={{marginTop:"20px", marginLeft:"18px"}}>
-              <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/nuevo`}>agregar cliente</Button>
+              {/* <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/nuevo`}>agregar cliente</Button> */}
               
             </Grid>
 
             {/* 1/4 width item */}
             <Grid item xs={12}>
               <SearchDropdown
+                disabled
                 placeHolder="Selecciona Vendedor"
                 records={vendedores}
                 value={selectedVendedor}
@@ -445,7 +471,7 @@ const CuentaId = ()=>{
               />
             </Grid>
             <Grid container xs={12} spacing={2}  style={{marginTop:"20px", marginLeft:"18px"}}>
-              <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/nuevo`}>agregar vendedor</Button>
+              {/* <Button style={{backgroundColor:'#28a745'}} variant="contained" href={`/cliente/nuevo`}>agregar vendedor</Button> */}
               
             </Grid>
           </Grid>
@@ -473,7 +499,7 @@ const CuentaId = ()=>{
           {/* Material UI Grid for organizing the form fields */}
           <Grid container spacing={2}>
           <Grid item xs={3} style={{marginTop:"17px"}}>
-          <SearchDropdown placeHolder={"Selecciona Inmueble"} records={inmueblesDisponibles} value={selectedInmueble} handleSelect={(e)=>{handleSelectedInmueble(e)}} label1={"iden1"} label2={"iden2"} label3={"condominio"}/>
+          <SearchDropdown disabled placeHolder={"Selecciona Inmueble"} records={inmueblesDisponibles} value={selectedInmueble} handleSelect={(e)=>{handleSelectedInmueble(e)}} label1={"iden1"} label2={"iden2"} label3={"condominio"}/>
 
           </Grid>
 
@@ -777,9 +803,9 @@ const CuentaId = ()=>{
               />
             </Grid>
             <Grid item xs={4}>
-            <Button onClick={()=>{router.push(`inmuebles_disponibles`);}} variant="contained" color="primary" sx={{ marginTop: '20px' }}>
+            {/* <Button onClick={()=>{router.push(`inmuebles_disponibles`);}} variant="contained" color="primary" sx={{ marginTop: '20px' }}>
             Actualizar Precio
-          </Button>
+          </Button> */}
             </Grid>
           </Grid>
     
@@ -811,7 +837,7 @@ const CuentaId = ()=>{
           <Grid item xs={3} style={{marginTop:"17px"}}>
                       <FormControl fullWidth>
                       <InputLabel>Forma de Pago</InputLabel>
-                      <Select name="formadepago" value={formFormaDePago.formadepago || ''} onChange={handleChangeFormFormadePago} label="Estado Civil">
+                      <Select disabled name="formadepago" value={formFormaDePago.formadepago || ''} onChange={handleChangeFormFormadePago} label="Forma de Pago">
                       <MenuItem value="C">Contado</MenuItem>
                       <MenuItem value="R">Credito</MenuItem>
                       </Select>
@@ -823,7 +849,7 @@ const CuentaId = ()=>{
               <Grid item xs={3} style={{marginTop:"17px"}}>
               <FormControl fullWidth>
               <InputLabel>Mensualidades</InputLabel>
-              <Select name="plazomeses" value={formFormaDePago.plazomeses || ''} onChange={handleChangeFormFormadePago} label="Estado Civil">
+              <Select disabled name="plazomeses" value={formFormaDePago.plazomeses || ''} onChange={handleChangeFormFormadePago} label="Plazo Meses">
                 {
                 lista.map((item)=>{
                   return <MenuItem value={item}>{item} Mes{item>1 ? "es": ""}</MenuItem>
@@ -851,35 +877,13 @@ const CuentaId = ()=>{
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DemoContainer components={['DatePicker']}>
                     <DatePicker
+                        disabled
                         label="Fecha Primer Pago"
                         value={var_fecha}
                         onChange={(newValue) => handleFecha(newValue, "fechaprimerpago")}
                       />
                     </DemoContainer>
                     </LocalizationProvider>
-            </Grid>
-            
-    
-            <Grid item xs={4}>
-              <TextField
-                label="Enganche"
-                name="enganche"
-                value={formFormaDePago.enganche || ''}
-                onChange={handleChangeFormFormadePago}
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-
-            <Grid item xs={4}>
-              <TextField
-                label="Descuento"
-                name="descuento"
-                value={formFormaDePago.descuento || ''}
-                onChange={handleChangeFormFormadePago}
-                fullWidth
-                margin="normal"
-              />
             </Grid>
             <Grid item xs={4}>
               {/* <TextField
@@ -892,10 +896,35 @@ const CuentaId = ()=>{
                 //disabled
               /> */}
             </Grid>
+    
+            <Grid item xs={4}>
+              <TextField
+                disabled
+                label="Enganche"
+                name="enganche"
+                value={formFormaDePago.enganche || ''}
+                onChange={handleChangeFormFormadePago}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={4}>
+              <TextField
+                disabled
+                label="Descuento"
+                name="descuento"
+                value={formFormaDePago.descuento || ''}
+                onChange={handleChangeFormFormadePago}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
             <Grid item xs={3} style={{marginTop:"10px"}}>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DemoContainer components={['DatePicker']}>
                     <DatePicker
+                        disabled
                         label="Fecha de enganche"
                         value={var_fechaenganche}
                         onChange={(newValue) => handleFecha(newValue, "fechaenganche")}
@@ -906,6 +935,7 @@ const CuentaId = ()=>{
             
             <Grid item xs={4}>
               <TextField
+                disabled
                 label="Saldo a financiar"
                 name="saldoafinanciar"
                 value={formFormaDePago.saldoafinanciar || ''}
@@ -914,6 +944,11 @@ const CuentaId = ()=>{
                 margin="normal"
               />
             </Grid>
+            <Grid item xs={3}>
+              <Button style={{backgroundColor:"#198754", color:"white", marginTop:"25px"}} onClick={handle_guardar_amortizacion_detalle} >
+            Guardar y Crear Cuenta
+          </Button>
+          </Grid> 
           
             
             {/* <Grid item xs={4}>
@@ -956,6 +991,7 @@ const CuentaId = ()=>{
           </Grid>
               
           )}
+          
         </Box>
 
         </Box>

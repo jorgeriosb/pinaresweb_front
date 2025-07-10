@@ -45,8 +45,14 @@ export const Nav = () => {
         <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/contrato")}}>
           Contratos
         </Button>
+        <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/amortizacion")}}>
+          Amortizaciones
+        </Button>
         <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/resumen")}}>
           Resumen
+        </Button>
+        <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/saldos")}}>
+          Saldos
         </Button>
         {/* <Button
           onClick={() => {

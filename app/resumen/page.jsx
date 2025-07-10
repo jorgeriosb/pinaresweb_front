@@ -97,7 +97,7 @@ const headers = ['year', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago',
 
 const columns = headers.map((header) => ({
   field: header,
-  headerName: header,
+  headerName: header === "year" ? "Año" : header,
   width: header === 'year' ? 100 : 90,
 }));
 

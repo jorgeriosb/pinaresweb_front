@@ -1,8 +1,9 @@
 "use client"; // This is a client component 👈🏽
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Grid, Container, Box} from '@mui/material';
-import {get_resumen2, get_resumen_inmuebles_fecha} from "../api/resument"
-import {get_saldos} from "../api/saldos"
+import {get_resumen, get_resumen_inmuebles_fecha} from "../api/resument"
+import {get_amortizaciones_sincuenta} from "../api/amortizacion"
+import {get_clientes, get_cliente_id} from "../api/cliente"
 import {
   Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, Typography, CircularProgress
@@ -24,12 +25,16 @@ const ClienteForm = () => {
   const [loading, setLoading] = useState(true);
   const [inmuebles, setInmuebles] = useState([]);
   const [sectedDate, setSelectedDate] = useState("");
+  const [clientes, setClientes] = useState([])
 
 
   useEffect(()=>{
     let get_data = async ()=>{
       console.log("aqui")
-      get_saldos()
+      let val = await get_amortizaciones_sincuenta()
+      let jval = await val.json()
+      setData(jval)
+     
     }
     get_data()
   },[])
@@ -59,60 +64,43 @@ const ClienteForm = () => {
   const columsMovimientos =()=>{
       return [
           //{ field: 'id', headerName: 'codigo', width: 100 },
-          { field: 'month', headerName: 'Fecha',type: 'String', width: 200 },
-          { field: 'count', headerName: 'Cantidad',type: 'number', width: 200,
+          { field: 'pkamortizacion', headerName: 'Contrato',type: 'String', width: 400,
             renderCell: (params) => {
-              return <div><Link href="#" onClick={()=>{handle_get_items_fecha(params.row.month)}}>{params.row.count}</Link></div>
+              return <div><Link href={`contrato/${params.row.pkamortizacion}`}>{params.row.pkamortizacion}</Link></div>
+            }
+           },
+          { field: 'cliente.nombre', headerName: 'Nombre',type: 'String', width: 400,
+            renderCell: (params) => {
+              return <div>{params.row.cliente.nombre}</div>
+            }
+           },
+           { field: 'cliente.lote', headerName: 'Lote',type: 'String', width: 400,
+            renderCell: (params) => {
+              return <div>Manzana: {params.row.inmueble.iden1} Lote: {params.row.inmueble.iden2}</div>
             }
            },
         ]
-  
   }
-
-  const columsInmueble =()=>{
-    return [
-        { field: 'id', headerName: 'codigo', width: 100 },
-        { field: 'iden1', headerName: 'Manzana',type: 'String', width: 50 },
-        { field: 'iden2', headerName: 'Lote',type: 'String', width: 50,},
-        { field: 'condominio', headerName: 'Etapa',type: 'String', width: 200,},
-        {
-          field: 'fechadeventa',
-          headerName: 'Fecha De Venta',
-          type: 'number',
-          width: 200,
-          valueFormatter: (params) => {
-            let date = new Date(params)
-            return dayjs(date).format('DD [de] MMMM [de] YYYY')},
-        },
-        { field: 'superficie', headerName: 'Superficie',type: 'Number', width: 200,},
-        { field: 'preciopormetro', headerName: 'Precio x M2',type: 'Number', width: 200,},
-        { field: 'precio', headerName: 'Precio',type: 'Number', width: 200,},
-
-      ]
-
-}
-const headers = ['year', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Total'];
-
-const columns = headers.map((header) => ({
-  field: header,
-  headerName: header === "year" ? "Año" : header,
-  width: header === 'year' ? 100 : 90,
-}));
-
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Saldos
+        Contratos Sin Cuenta
       </Typography>
-      <Box style={{height:"700px"}}>
+      <Box style={{height:"400px"}}>
       <DataGrid
-        rows={data}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-      />
+              disableRowSelectionOnClick
+              //checkboxSelection
+              style={{height:"400px"}}
+              rows={data}
+              columns={columsMovimientos()}
+              //initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              sx={{ border: 0 }}
+              slots={{ toolbar: GridToolbar }}
+            />
       </Box>
+      
       
       
 
