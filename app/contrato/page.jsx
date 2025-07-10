@@ -950,7 +950,7 @@ const CuentaId = ()=>{
           </Grid> 
           <Grid item xs={3}>
               <Button style={{backgroundColor:"#198754", color:"white"}} onClick={handle_guardar_amortizacion_detalle} >
-            Guardar y Crear Cuenta
+            Guardar Contrato
           </Button>
           </Grid> 
           </Grid>

@@ -409,9 +409,9 @@ const CuentaId = ()=>{
           </Grid>
     
           {/* Submit Button */}
-          <Button type="submit" variant="contained" color="primary" sx={{ marginTop: '20px' }}>
+          {/* <Button type="submit" variant="contained" color="primary" sx={{ marginTop: '20px' }}>
             Submit
-          </Button>
+          </Button> */}
         </Box>
         
         </Box>

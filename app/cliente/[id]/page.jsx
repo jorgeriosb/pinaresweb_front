@@ -4,7 +4,7 @@ import { FormControlLabel, FormGroup, Button, TextField, Grid, Container, Typogr
 
 import {get_cliente_id} from "../../api/cliente"
 import useAuth from '../../hooks/useAuth';
-import {create_cliente} from "../../api/cliente"
+import {create_cliente, update_cliente} from "../../api/cliente"
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation'
 
@@ -78,8 +78,10 @@ const ClienteForm = () => {
     e.preventDefault();
     // Handle form submission (e.g., send to backend)
     console.log('Form data submitted:', formData);
-    formData["clienteNuevo"]=clienteNuevo;
-    const val = await create_cliente(formData)
+    //formData["clienteNuevo"]=clienteNuevo;
+    let url = window.location.href;
+    let id = url.split("/")[4];
+    const val = await update_cliente(id, formData)
     const jval = await val.json()
     if(jval["status"]==="good"){
       setFormData(jval["data"])
@@ -203,7 +205,7 @@ const ClienteForm = () => {
               value={formData.codigo || ''}
               onChange={handleChange}
               fullWidth
-              disabled={clienteNuevo}
+              disabled
               required={clienteNuevo}
             />
           </Grid>
@@ -525,7 +527,7 @@ const ClienteForm = () => {
 
 
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }}>
-          Grabar
+          Actualizar
         </Button>
       </form>
     </Container>

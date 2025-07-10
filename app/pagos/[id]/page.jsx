@@ -275,6 +275,7 @@ const PagosId = ()=>{
         link.remove();
         window.URL.revokeObjectURL(url);
             //falta descargar el recibo pdf
+        setSelectedPagoDocumentos([])
       }
     }
     return (
