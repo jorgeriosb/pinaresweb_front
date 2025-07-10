@@ -777,9 +777,9 @@ const CuentaId = ()=>{
               />
             </Grid>
             <Grid item xs={4}>
-            <Button onClick={()=>{router.push(`inmuebles_disponibles`);}} variant="contained" color="primary" sx={{ marginTop: '20px' }}>
+            {/* <Button onClick={()=>{router.push(`inmuebles_disponibles`);}} variant="contained" color="primary" sx={{ marginTop: '20px' }}>
             Actualizar Precio
-          </Button>
+          </Button> */}
             </Grid>
           </Grid>
     
