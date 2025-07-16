@@ -54,6 +54,9 @@ export const Nav = () => {
         <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/saldos")}}>
           Saldos
         </Button>
+        <Button style={{backgroundColor:"#728f35"}} onClick={()=>{router.push("/solicitud")}}>
+          Solicitud Pago
+        </Button>
         {/* <Button
           onClick={() => {
             window.open(

@@ -882,8 +882,8 @@ const CuentaId = ()=>{
                         value={var_fecha}
                         onChange={(newValue) => handleFecha(newValue, "fechaprimerpago")}
                       />
-                    </DemoContainer>
-                    </LocalizationProvider>
+                </DemoContainer>
+                </LocalizationProvider>
             </Grid>
             <Grid item xs={4}>
               {/* <TextField
