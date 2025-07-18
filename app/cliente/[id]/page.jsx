@@ -55,12 +55,13 @@ const ClienteForm = () => {
     let url = window.location.href;
     let id_user = url.split("/")[4];
     const get_cliente =async ()=>{
-      get_cliente_id
-      let response = await get_cliente_id(id_user)
+      if(params["id"] != "nuevo"){
+        let response = await get_cliente_id(id_user)
       response = await response.json()
       setFormData((prev)=>{
         return {...response}
       })
+      }
     }
     get_cliente()
     console.log("viendo params", params)
@@ -76,19 +77,31 @@ const ClienteForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send to backend)
     console.log('Form data submitted:', formData);
-    //formData["clienteNuevo"]=clienteNuevo;
-    let url = window.location.href;
-    let id = url.split("/")[4];
-    const val = await update_cliente(id, formData)
-    const jval = await val.json()
-    if(jval["status"]==="good"){
-      setFormData(jval["data"])
-      router.push(`/cliente/${jval["data"]["codigo"]}`)
+    if(params["id"] === "nuevo"){
+      console.log("se fue por aqui");
+      formData["clienteNuevo"]=true
+      let val = await create_cliente(formData)
+      const jval = await val.json()
+      if(jval["status"]==="good"){
+        setFormData(jval["data"])
+        router.push(`/cliente/${jval["data"]["codigo"]}`)
+      }
+
     }else{
+      //formData["clienteNuevo"]=clienteNuevo;
+      let url = window.location.href;
+      let id = url.split("/")[4];
+      const val = await update_cliente(id, formData)
+      const jval = await val.json()
+      if(jval["status"]==="good"){
+        setFormData(jval["data"])
+        router.push(`/cliente/${jval["data"]["codigo"]}`)
+      }
 
     }
+    
+    
   };
 
   const llenaforma = ()=>{
@@ -527,7 +540,7 @@ const ClienteForm = () => {
 
 
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }}>
-          Actualizar
+          {params["id"] === "nuevo"? "Guardar" : "actualizar" }
         </Button>
       </form>
     </Container>
