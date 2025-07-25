@@ -69,10 +69,10 @@ const CuentaId = ()=>{
       let payload = {};
       payload["formadepago"]=formFormaDePago.formadepago;
       payload["fechaprimerpago"]= formFormaDePago.fechaprimerpago
+      payload["fechaenganche"] = formFormaDePago.fechaenganche
       payload["precio"] = formFormaDePago.preciocontado
       payload["enganche"] = formFormaDePago.enganche
       payload["descuento"] = formFormaDePago.descuento
-      payload["fechaenganche"] = formFormaDePago.fechaenganche
       payload["saldoafinanciar"] = formFormaDePago.saldoafinanciar
       payload["inmueble_iden1"] = inmuebleData.iden1
       payload["inmueble_iden2"] = inmuebleData.iden2
@@ -109,6 +109,7 @@ const CuentaId = ()=>{
         "total_pagare": parseFloat(formFormaDePago.saldoafinanciar),
         "plazo_meses":  parseFloat(formFormaDePago.plazomeses),
         "fecha_inicio": formFormaDePago.fechaprimerpago,
+        "fecha_enganche":formaDePago.fechaenganche,
         "interes_moratorio": 25,
         "nombre_suscriptor": selectedCliente.nombre,
         "domicilio_suscriptor": selectedCliente.domicilio,

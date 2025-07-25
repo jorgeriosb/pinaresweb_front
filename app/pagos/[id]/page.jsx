@@ -35,8 +35,12 @@ import MyModal from "../../../components/MyModal"
 import ModalPagarVarios from "../../../components/ModalPagarVarios"
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // idioma español
+import utc from 'dayjs/plugin/utc';
+
 
 dayjs.locale('es'); // establecer español como global
+
+dayjs.extend(utc);
 
 
 const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiplePayment)=>{
@@ -58,7 +62,7 @@ const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiple
       width: 250,
       valueFormatter: (params) => {
         let date = new Date(params)
-        return dayjs(date).format('DD [de] MMMM [de] YYYY')},
+        return dayjs(date).utc().format('DD [de] MMMM [de] YYYY')},
     },
     {
       field: 'acciones',
@@ -99,7 +103,7 @@ const columsMovimientos =()=>{
             width: 200,
             valueFormatter: (params) => {
               let date = new Date(params)
-              return dayjs(date).format('DD [de] MMMM [de] YYYY')},
+              return dayjs(date).utc().format('DD [de] MMMM [de] YYYY')},
           },
         {
           field: 'fechavencimientodoc',
@@ -108,7 +112,7 @@ const columsMovimientos =()=>{
           width: 200,
           valueFormatter: (params) => {
             let date = new Date(params)
-            return dayjs(date).format('DD [de] MMMM [de] YYYY')},
+            return dayjs(date).utcOffset().format('DD [de] MMMM [de] YYYY')},
         },
         {
           field: 'numrecibo',

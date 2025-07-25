@@ -21,9 +21,12 @@ import {genera_contrato} from "../../api/contrato"
 import {genera_cuenta} from "../../api/cuenta"
 import BasicModal from "../../../components/ModalCuentaCreada"
 import Paper from '@mui/material/Paper';
+import utc from 'dayjs/plugin/utc';
+
 
 
 dayjs.locale('es');
+dayjs.extend(utc);
 
 
 
@@ -197,6 +200,11 @@ const CuentaId = ()=>{
       window.URL.revokeObjectURL(url);
     }
 
+    const formatea_fecha = (fecha)=>{
+      const date = new Date(fecha);
+      return date.toISOString().split('T')[0];
+    } 
+
     const handle_guardar_amortizacion_detalle = async()=>{
       console.log("selectedInmueble ", selectedInmueble)
       let payload = {
@@ -229,6 +237,7 @@ const CuentaId = ()=>{
         "fk_etapa": selectedInmueble.fk_etapa,
         "forma_de_pago": formFormaDePago.formadepago,
         "fecha_primer_pago":formFormaDePago.fechaprimerpago,
+        "fecha_enganche":formFormaDePago.fechaenganche,
         "fk_cliente": selectedCliente.codigo,
         "fkvendedor":selectedVendedor.codigo,
         "fkinmueble":selectedInmueble.codigo,
@@ -351,8 +360,8 @@ const CuentaId = ()=>{
               "plazomeses":jamortizacion.plazomeses,
               "tasainteresanual":jamortizacion.tasainteresanual
             })
-            setFecha(dayjs(jamortizacion.fechaprimerpago))
-            setFechaEnganche(dayjs(jamortizacion.fechaenganche))
+            setFecha(dayjs(jamortizacion.fechaprimerpago).utc())
+            setFechaEnganche(dayjs(jamortizacion.fechaenganche).utc())
 
 
         }
