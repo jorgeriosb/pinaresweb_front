@@ -317,9 +317,9 @@ const CuentaId = ()=>{
 
     useEffect(()=>{
         const get_data = async()=>{
-            const val = await get_inmuebles_disponibles()
-            const jval = await val.json()
-            setInmueblesDisponibles(jval)
+            // const val = await get_inmuebles_disponibles()
+            // const jval = await val.json()
+            //setInmueblesDisponibles(jval)
             const clientes = await get_clientes()
             const jclientes = await clientes.json()
             setClientes(jclientes)
@@ -335,6 +335,10 @@ const CuentaId = ()=>{
             let amortizacion = await get_amortizacion_id(id)
             let jamortizacion = await amortizacion.json()
             console.log("viendolo ", jamortizacion)
+            let inmuebler = await get_inmueble_id(jamortizacion.fkinmueble)
+            let jinmueble = await inmuebler.json()
+            setInmueblesDisponibles([jinmueble])
+
             let cliente = jclientes.filter((item)=>{
               return item.codigo === jamortizacion.fkcliente
             })
@@ -344,11 +348,9 @@ const CuentaId = ()=>{
               return item.codigo === jamortizacion.fkvendedor
             })
             setSelectedVendedor(vendedor[0])
-            let inmueble = jval.filter((item)=>{
-              return item.codigo === jamortizacion.fkinmueble
-            })
-            //setSelectedInmueble(inmueble[0])
-            handleSelectedInmueble(inmueble[0])
+
+            setSelectedInmueble(jinmueble)
+            handleSelectedInmueble(jinmueble)
             setFormFormaDePago({
               ...formFormaDePago,
               "formadepago":jamortizacion.formapago,
