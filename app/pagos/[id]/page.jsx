@@ -112,7 +112,9 @@ const columsMovimientos =()=>{
           width: 200,
           valueFormatter: (params) => {
             let date = new Date(params)
-            return dayjs(date).utcOffset().format('DD [de] MMMM [de] YYYY')},
+            return dayjs(date)
+  .utcOffset(dayjs().utcOffset()) // keeps your local offset
+  .format('DD [de] MMMM [de] YYYY');},
         },
         {
           field: 'numrecibo',
