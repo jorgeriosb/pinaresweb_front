@@ -112,7 +112,7 @@ const CuentaId = ()=>{
         "fecha_enganche":formaDePago.fechaenganche,
         "interes_moratorio": 25,
         "nombre_suscriptor": selectedCliente.nombre,
-        "domicilio_suscriptor": selectedCliente.domicilio,
+        "domicilio_suscriptor": `${selectedCliente.domicilio}, ${selectedCliente.colonia}, ${selectedCliente.estado} ${selectedCliente.cp}`,
         "telefono_suscriptor": selectedCliente.telefonocasa
       }
 

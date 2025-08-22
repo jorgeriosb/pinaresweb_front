@@ -113,7 +113,7 @@ const CuentaId = ()=>{
         "fecha_inicio": formFormaDePago.fechaprimerpago,
         "interes_moratorio": 25,
         "nombre_suscriptor": selectedCliente.nombre,
-        "domicilio_suscriptor": selectedCliente.domicilio,
+        "domicilio_suscriptor": `${selectedCliente.domicilio}, ${selectedCliente.colonia}, ${selectedCliente.estado} ${selectedCliente.cp}`,
         "telefono_suscriptor": selectedCliente.telefonocasa
       }
 
