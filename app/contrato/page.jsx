@@ -837,7 +837,7 @@ const CuentaId = ()=>{
             {formFormaDePago.formadepago == "R" && (
               <Grid item xs={3}>
               <TextField
-              disabled
+              
                 label="Tasa de interes anual"
                 name="tasainteresanual"
                 value={formFormaDePago.tasainteresanual || ''}
