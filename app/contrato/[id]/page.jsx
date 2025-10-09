@@ -286,19 +286,19 @@ const CuentaId = ()=>{
       });
     };
 
-    useEffect(()=>{
-      if(formFormaDePago.plazomeses<=24){
-        setFormFormaDePago({
-          ...formFormaDePago,
-          ["tasainteresanual"]:0 ,
-        });
-      } else{
-        setFormFormaDePago({
-          ...formFormaDePago,
-          ["tasainteresanual"]:20 ,
-        });
-      }
-    }, [formFormaDePago.plazomeses])
+    // useEffect(()=>{
+    //   if(formFormaDePago.plazomeses<=24){
+    //     setFormFormaDePago({
+    //       ...formFormaDePago,
+    //       ["tasainteresanual"]:0 ,
+    //     });
+    //   } else{
+    //     setFormFormaDePago({
+    //       ...formFormaDePago,
+    //       ["tasainteresanual"]:20 ,
+    //     });
+    //   }
+    // }, [formFormaDePago.plazomeses])
 
     useEffect(()=>{
       if(formFormaDePago.formadepago !== "R"){
