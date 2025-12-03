@@ -959,6 +959,9 @@ const CuentaId = ()=>{
               <Button style={{backgroundColor:"#198754", color:"white", marginTop:"25px"}} onClick={handle_guardar_amortizacion_detalle} >
             Guardar y Crear Cuenta
           </Button>
+          <Button style={{backgroundColor:"#6c757d", color:"white"}} onClick={handle_genera_contrato} >
+            Generar Contrato
+          </Button>
           </Grid> 
           
             
