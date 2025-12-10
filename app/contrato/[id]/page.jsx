@@ -344,9 +344,10 @@ const CuentaId = ()=>{
             })
             console.log("viendo el cliente ", cliente[0])
             setSelectedCliente(cliente[0])
-            let vendedor = jclientes.filter((item)=>{
+            let vendedor = jval2.filter((item)=>{
               return item.codigo === jamortizacion.fkvendedor
             })
+            console.log("viendo el vendeor ", vendedor[0])
             setSelectedVendedor(vendedor[0])
 
             setSelectedInmueble(jinmueble)
