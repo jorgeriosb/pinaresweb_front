@@ -29,6 +29,7 @@ const ClienteForm = () => {
 
 
   useEffect(()=>{
+    console.log("probando")
     let get_data = async ()=>{
       console.log("aqui")
       let val = await get_amortizaciones_sincuenta()
