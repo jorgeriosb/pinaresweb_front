@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 
 
 
-import {get_cuenta_documentos} from "../../api/cuenta"
+import {get_cuenta_documentos, estado_de_cuenta} from "../../api/cuenta"
 import {get_documento_movimientos, crear_documento_pago_anterior, pagar_documentos_varios} from "../../api/documento"
 import {get_gixamortizacion} from "../../api/gixamortizacion"
 import {get_recibo} from "../../api/recibo"
@@ -26,6 +26,8 @@ import Grid from '@mui/material/Grid2';
 import Checkbox from '@mui/material/Checkbox';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { GridToolbarContainer} from '@mui/x-data-grid';
+
 
 
 
@@ -41,6 +43,44 @@ import utc from 'dayjs/plugin/utc';
 dayjs.locale('es'); // establecer español como global
 
 dayjs.extend(utc);
+
+
+function CustomToolbar({cuenta}) {
+
+  const handlePost = async () => {
+    console.log("aqui")
+    const res = await estado_de_cuenta(cuenta)
+    const blob = await res.blob();
+
+    // Create a temporary URL and download link
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Set the filename for download
+    link.download = 'estado_cuenta.csv';
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  return (
+    <GridToolbarContainer>
+      <GridToolbar />
+      
+      <Button
+        variant="contained"
+        onClick={handlePost}
+        sx={{ ml: 'auto' }} // pushes button to the right
+      >
+        Procesar
+      </Button>
+    </GridToolbarContainer>
+  );
+}
 
 
 const renderCols =(router, getMovimientos, modalPagoAterior, handleCheckMultiplePayment)=>{
@@ -315,10 +355,13 @@ const PagosId = ()=>{
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
-        slots={{ toolbar: GridToolbar }}
+        //slots={{ toolbar: GridToolbar }}
         onRowSelectionModelChange={(newSelection) => {
           console.log("viendo esto ", newSelection)
           //setSelectedIds(newSelection);
+        }}
+        slots={{
+          toolbar: () => <CustomToolbar  cuenta={params["id"]}/>
         }}
       />
       </LocalizationProvider>

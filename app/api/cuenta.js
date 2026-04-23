@@ -22,4 +22,8 @@ const genera_cuenta = async (payload) =>{
 const get_cuentas_vencidas = ()=>{
     return req_get("/api/cuentas_vencidas")
 }
-export {get_cuenta_id, get_cuenta_documentos, getClientes_cuenta, genera_cuenta, get_cuentas_vencidas}
+
+const estado_de_cuenta = (id)=>{
+    return req_get("/api/estadodecuenta/"+id)
+}
+export {get_cuenta_id, get_cuenta_documentos, getClientes_cuenta, genera_cuenta, get_cuentas_vencidas, estado_de_cuenta}

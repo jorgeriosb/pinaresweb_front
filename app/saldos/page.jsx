@@ -32,7 +32,7 @@ function Row({ label, value, cuentas }) {
               {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </IconButton>
           )}
-          {label}
+          {label}: {cuentas.length ?? 0}
         </TableCell>
         <TableCell>{value}</TableCell>
       </TableRow>
@@ -52,6 +52,7 @@ function Row({ label, value, cuentas }) {
                       <TableRow key={c.cuenta}>
                         <TableCell>{c.cuenta}</TableCell>
                         <TableCell>{c.nombre}</TableCell>
+                        <TableCell>{c.lote}</TableCell>
                         <TableCell>{c.saldo}</TableCell>
                       </TableRow>
                     ))}
