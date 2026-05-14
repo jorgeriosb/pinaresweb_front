@@ -72,8 +72,8 @@ const CuentaId = ()=>{
       payload["fechaenganche"] = formFormaDePago.fechaenganche
       payload["precio"] = formFormaDePago.preciocontado
       payload["enganche"] = formFormaDePago.enganche
-      payload["descuento"] = formFormaDePago.descuento
-      payload["saldoafinanciar"] = formFormaDePago.saldoafinanciar
+      payload["descuento"] = formFormaDePago.descuento || 0
+      payload["saldoafinanciar"] = formFormaDePago.saldoafinanciar || 0
       payload["inmueble_iden1"] = inmuebleData.iden1
       payload["inmueble_iden2"] = inmuebleData.iden2
       payload["inmueble_preciopormetro"]=inmuebleData.preciopormetro
@@ -82,7 +82,7 @@ const CuentaId = ()=>{
       payload["interes_anual"] =0
       if(formFormaDePago.formadepago == "R"){
         payload["mensualidades"]=formFormaDePago.plazomeses
-        payload["interes_anual"] =formFormaDePago.tasainteresanual
+        payload["interes_anual"] =formFormaDePago.tasainteresanual || 0 
       }
       let recibo = await genera_tabla_amortizacion(payload)
         const blob = await recibo.blob();
@@ -111,6 +111,7 @@ const CuentaId = ()=>{
         "fecha_inicio": formFormaDePago.fechaprimerpago,
         "fecha_enganche":formaDePago.fechaenganche,
         "interes_moratorio": 25,
+        "interes_anual": formFormaDePago.tasainteresanual || 0,
         "nombre_suscriptor": selectedCliente.nombre,
         "domicilio_suscriptor": `${selectedCliente.domicilio}, ${selectedCliente.colonia}, ${selectedCliente.ciudad} ${selectedCliente.estado} ${selectedCliente.cp}`,
         "telefono_suscriptor": selectedCliente.telefonocasa
